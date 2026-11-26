@@ -1,0 +1,57 @@
+name: Aprovar post
+
+# Comenta "ok" numa Issue de rascunho para publicar, ou "não" para descartar.
+on:
+  issue_comment:
+    types: [created]
+
+concurrency:
+  group: ip-state
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  approve:
+    # só o dono do repositório pode aprovar
+    if: >
+      github.event.comment.user.login == github.repository_owner &&
+      contains(github.event.issue.labels.*.name, 'rascunho') &&
+      github.event.issue.state == 'open'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install anthropic pydantic requests
+      - name: Publicar ou descartar
+        env:
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
+          TITLE: ${{ github.event.issue.title }}
+          COMMENT: ${{ github.event.comment.body }}
+          NUM: ${{ github.event.issue.number }}
+        run: |
+          ID=$(printf '%s' "$TITLE" | sed -E 's/^\[([0-9-]+)\].*/\1/')
+          C=$(printf '%s' "$COMMENT" | tr '[:upper:]' '[:lower:]' | xargs)
+          git config user.name "insta-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          case "$C" in
+            ok|sim|publica|publicar|👍)
+              python -m ip.main publish "$ID" | tee out.txt
+              LINK=$(grep -o 'https://[^ ]*' out.txt | tail -1)
+              git add state.json && git commit -m "publicado $ID" && git push
+              gh issue close "$NUM" --comment "✅ Publicado: $LINK" ;;
+            não|nao|no|descartar)
+              python -m ip.main discard "$ID"
+              git add state.json && git commit -m "descartado $ID" && git push
+              gh issue close "$NUM" --reason "not planned" --comment "🗑️ Descartado" ;;
+            *) echo "Comentário ignorado" ;;
+          esac

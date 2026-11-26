@@ -1,0 +1,72 @@
+name: Criar post
+
+on:
+  schedule:
+    # 3 posts/dia. Horas em UTC → Luanda/Lisboa(inverno) +1/+0, Maputo +2, Praia -1.
+    # O GitHub pode atrasar alguns minutos (por vezes mais) — por isso não usamos horas "redondas".
+    - cron: "17 7 * * *"    # ~08:15 Luanda · 09:15 Maputo
+    - cron: "43 11 * * *"   # ~12:45 Luanda · 13:45 Maputo (hora de almoço)
+    - cron: "23 18 * * *"   # ~19:20 Luanda · 20:20 Maputo (noite, pico)
+  workflow_dispatch:
+    inputs:
+      hint:
+        description: "Indicação opcional de tema (ex.: 'novo modelo da OpenAI', 'startups em Angola')"
+        default: ""
+
+concurrency:
+  group: ip-state
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt && python -m playwright install --with-deps chromium
+      - run: npm install -g @anthropic-ai/claude-code
+
+      - name: Pesquisar e escrever post
+        id: create
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          HINT: ${{ inputs.hint }}
+        run: python -m ip.main create
+
+      - name: Guardar imagens e estado
+        run: |
+          git config user.name "insta-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add media drafts state.json
+          git commit -m "post ${{ steps.create.outputs.post_id }}"
+          git push
+
+      - name: Publicar já (modo automático)
+        if: vars.AUTO_PUBLISH == '1'
+        env:
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+        run: |
+          sleep 20   # dar tempo ao CDN do GitHub para servir as imagens
+          python -m ip.main publish "${{ steps.create.outputs.post_id }}"
+          git add state.json && git commit -m "publicado ${{ steps.create.outputs.post_id }}" && git push
+
+      - name: Pedir aprovação (Issue)
+        if: vars.AUTO_PUBLISH != '1'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          ID="${{ steps.create.outputs.post_id }}"
+          TEMA=$(python -c "import json;print(json.load(open('drafts/$ID.json'))['tema'][:80])")
+          gh label create rascunho --color FBCA04 2>/dev/null || true
+          gh issue create --title "[$ID] $TEMA" --label rascunho --body-file "drafts/$ID.md"
