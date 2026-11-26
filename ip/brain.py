@@ -23,24 +23,25 @@ FORMATOS = {
 
 SYSTEM = f"""És o editor de conteúdo da conta de Instagram {IG_HANDLE}, sobre tecnologia, negócios e inteligência artificial.
 
-PÚBLICO: pessoas dos PALOP (Angola, Moçambique, Cabo Verde, Guiné-Bissau, São Tomé e Príncipe) e Portugal —
+PÚBLICO: pessoas dos PALOP (Cabo Verde, Angola, Moçambique, Guiné-Bissau, São Tomé e Príncipe) e Portugal —
 empreendedores, profissionais, estudantes e curiosos que querem usar tecnologia para crescer.
 
 LÍNGUA: português de Portugal (norma europeia, Acordo Ortográfico de 1990). Nunca português do Brasil
 (usa "telemóvel", "ecrã", "equipa", "utilizador", "registar", "partilhar", "aplicação"; nada de gerúndio brasileiro
 como "estou fazendo" — escreve "estou a fazer").
 
-QUEM É O AUTOR: Erikson Sequeira, empreendedor angolano que voltou a Angola depois de 20 anos em Portugal
-para construir e empreender. Valores: disciplina, ambição, evolução constante, fé. Viaja em trabalho pela Europa.
+QUEM É O AUTOR: Erikson Sequeira, empreendedor cabo-verdiano que voltou ao seu país (Cabo Verde) depois de
+20 anos fora, para construir e empreender. NUNCA digas que ele é angolano nem que vive/empreende em Angola. Valores: disciplina, ambição, evolução constante, fé. Viaja em trabalho pela Europa.
 Os posts que mais funcionam na conta são curiosidades de tecnologia ("Sabias que…", inovações que surpreendem)
 explicadas de forma simples. Ocasionalmente (não sempre) podes incluir na legenda uma frase na primeira pessoa
-com a perspetiva dele como empreendedor ("Como empreendedor em Angola, vejo…"), sem inventar experiências concretas.
+com a perspetiva dele como empreendedor ("Como empreendedor cabo-verdiano, vejo…"), sem inventar experiências concretas.
 
 VOZ: direta, confiante, prática, sem jargão desnecessário. Frases curtas. Fala para "tu". Zero clichés de guru
 ("isto vai mudar a tua vida", "ninguém te conta"). Útil acima de tudo: cada slide tem de ensinar ou provar algo.
 
-RELEVÂNCIA PALOP: sempre que fizer sentido (sem forçar), liga o tema à realidade local — mobile money
-(Unitel Money, Multicaixa Express, M-Pesa, e-Mola), custo de dados móveis, economia informal, startups africanas,
+RELEVÂNCIA PALOP: sempre que fizer sentido (sem forçar), liga o tema à realidade local — pagamentos digitais
+(vinti4 em Cabo Verde, Multicaixa Express/Unitel Money em Angola, M-Pesa/e-Mola em Moçambique, Orange Money),
+turismo e economia azul (Cabo Verde), diáspora, custo de dados móveis, economia informal, startups africanas,
 oportunidades de emprego remoto, educação, agricultura, governo digital.
 
 FACTOS — REGRA DE OURO:
@@ -62,7 +63,7 @@ FORMATO DOS SLIDES (carrossel 4:5):
 LEGENDA: 600–1500 caracteres. Primeira linha = gancho. Desenvolve com valor extra (não repitas só os slides),
 termina com uma pergunta para gerar comentários e um "Guarda este post" ou "Partilha com quem precisa".
 Inclui "Fonte: <nome do meio>" no fim (sem URLs). NÃO incluas hashtags na legenda.
-hashtags: exatamente 5, sem '#', em minúsculas, misturando gerais e de nicho/PALOP.
+hashtags: exatamente 5, sem '#', em minúsculas, misturando gerais e de nicho/PALOP (o país só se o post for sobre ele).
 """
 
 
@@ -86,6 +87,25 @@ class Post(BaseModel):
     fontes: list[str]
 
 
+FOCOS = {
+    "global": "Notícia/tema GLOBAL (EUA, Europa, Ásia — grandes empresas de IA e tecnologia, tendências mundiais). "
+              "No fim liga ao que significa para quem está nos PALOP. Não centres o post num único país africano.",
+    "cabo-verde": "Tema com foco em CABO VERDE (startups, governo digital, turismo, economia azul, conectividade, diáspora).",
+    "mocambique": "Tema com foco em MOÇAMBIQUE.",
+    "angola": "Tema com foco em ANGOLA.",
+    "africa": "Tema sobre ÁFRICA em geral (startups, investimento, inovação africana — Nigéria, Quénia, África do Sul, etc.).",
+    "guine-stp": "Tema com foco na GUINÉ-BISSAU ou em SÃO TOMÉ E PRÍNCIPE (se não houver notícias recentes relevantes, usa os PALOP em geral).",
+    "lusofonia": "Tema de PORTUGAL ou BRASIL com interesse para os PALOP (startups, IA, investimento, oportunidades).",
+}
+# metade global, o resto em rotação
+FOCO_CICLO = ["global", "cabo-verde", "global", "africa", "global", "mocambique",
+              "global", "angola", "global", "lusofonia", "global", "guine-stp"]
+
+
+def choose_foco(history: list[dict]) -> str:
+    return FOCO_CICLO[len(history) % len(FOCO_CICLO)]
+
+
 def choose_angle(history: list[dict]) -> tuple[str, str]:
     """Alterna pilares e formatos: escolhe o menos usado recentemente."""
     last = history[-12:]
@@ -99,12 +119,13 @@ def choose_angle(history: list[dict]) -> tuple[str, str]:
     return pilar, formato
 
 
-def build_prompt(pilar: str, formato: str, history: list[dict], hint: str = "") -> str:
+def build_prompt(pilar: str, formato: str, history: list[dict], hint: str = "", foco: str = "global") -> str:
     temas = "\n".join(f"- [{p['pilar']}] {p['tema']}" for p in history[-40:]) or "(nenhum ainda)"
     nomes = {"ia": "Inteligência Artificial", "tecnologia": "Tecnologia", "negocios": "Negócios e empreendedorismo"}
     return (
         f"Cria o próximo post.\n\nPILAR: {nomes[pilar]} (pilar = \"{pilar}\")\n"
-        f"FORMATO: {formato} — {FORMATOS[formato]}\n\n"
+        f"FORMATO: {formato} — {FORMATOS[formato]}\n"
+        f"FOCO GEOGRÁFICO: {FOCOS[foco]}\n\n"
         "Começa por pesquisar na internet as notícias/novidades mais relevantes deste pilar nos últimos dias "
         "(fontes internacionais e também africanas/lusófonas). Escolhe o tema com mais interesse para o público "
         "e que NÃO repita nenhum destes temas já publicados:\n"
@@ -158,8 +179,8 @@ def _parse_api(prompt: str) -> Post:
     return Post.model_validate_json(m.group(0))
 
 
-def write_post(pilar: str, formato: str, history: list[dict], hint: str = "") -> Post:
-    prompt = build_prompt(pilar, formato, history, hint)
+def write_post(pilar: str, formato: str, history: list[dict], hint: str = "", foco: str = "global") -> Post:
+    prompt = build_prompt(pilar, formato, history, hint, foco)
     if os.environ.get("CLAUDE_CODE_OAUTH_TOKEN") or os.environ.get("USE_CLAUDE_CLI") == "1":
         try:
             return _clean(_parse_cli(prompt))
@@ -188,6 +209,7 @@ VERIFY_RULES = """És um verificador de factos rigoroso. Vais receber um post de
 2. Confirma que a notícia é recente (não apresentada como nova se for antiga) e que nada foi exagerado ou distorcido.
 3. Confirma que o texto está em português de Portugal (não do Brasil) e não tem nada ofensivo, político-partidário,
    difamatório, nem conselhos financeiros/médicos perigosos.
+4. O autor (Erikson Sequeira) é cabo-verdiano: reprova se o texto disser que ele é angolano ou empreende em Angola.
 Pequenas questões de estilo NÃO reprovam. Reprova só por erros factuais, linguagem errada ou risco reputacional."""
 
 

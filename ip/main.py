@@ -30,10 +30,11 @@ def create(hint: str = "") -> str:
 
     st = state.load()
     pilar, formato = brain.choose_angle(st["posts"])
-    print(f"[post] pilar={pilar} formato={formato}")
+    foco = brain.choose_foco(st["posts"])
+    print(f"[post] pilar={pilar} formato={formato} foco={foco}")
     post = None
     for attempt in range(2):
-        cand = brain.write_post(pilar, formato, st["posts"], hint)
+        cand = brain.write_post(pilar, formato, st["posts"], hint, foco)
         v = brain.verify(cand)
         if v.aprovado:
             print("[verificação] aprovado")
