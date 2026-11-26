@@ -117,9 +117,12 @@ def choose_angle(history: list[dict]) -> tuple[str, str]:
     fc = Counter(p["formato"] for p in last)
     prev_pilar = last[-1]["pilar"] if last else None
     pilar = min((p for p in PILARES if p != prev_pilar), key=lambda p: (pc[p], PILARES.index(p)))
-    # um post "em alta" a cada 4; notícias são o formato principal; o resto alterna
-    if history and all(p.get("formato") != "hype" for p in history[-3:]):
-        return pilar, "hype"
+    # um conteúdo "em alta" a cada 3; notícias são o formato principal; o resto alterna
+    if history and all(p.get("formato") != "hype" for p in history[-2:]):  # 1 em cada 3 é "Em alta"
+        hc = Counter(p["pilar"] for p in history if p.get("formato") == "hype")
+        last_hype = next((p["pilar"] for p in reversed(history) if p.get("formato") == "hype"), None)
+        hp = min((x for x in PILARES if x != last_hype), key=lambda x: (hc[x], PILARES.index(x)))
+        return hp, "hype"
     fc.pop("hype", None)
     formato = "noticia-explicada" if fc["noticia-explicada"] <= sum(fc.values()) / 3 else \
         min((f for f in FORMATOS if f != "hype"), key=lambda f: (fc[f], list(FORMATOS).index(f)))
