@@ -1,0 +1,69 @@
+{
+  "pilar": "tecnologia",
+  "formato": "lista-pratica",
+  "tema": "5 programas e recursos digitais de Cabo Verde para startups e jovens (Skodji Digital, Web Summit Spotlight, Fundo Morabeza, pré-incubação, TechPark)",
+  "capa_titulo": "5 portas digitais que Cabo Verde já te abriu",
+  "capa_subtitulo": "Formação gratuita, financiamento e o primeiro Web Summit em África. Usa-as já.",
+  "slides": [
+    {
+      "titulo": "1. Skodji Digital: formação digital gratuita",
+      "texto": "Seis meses, quase tudo à distância, sem custos. Tem percursos para quem começa do zero, para quem muda de carreira e para quem quer subir de nível. A 1.ª fase juntou gente de todas as ilhas e da diáspora. Vê: skodjidigital.cv",
+      "destaque": "Gratuito"
+    },
+    {
+      "titulo": "2. Web Summit Spotlight: prepara-te já",
+      "texto": "Em dezembro, Cabo Verde recebe o primeiro evento da marca Web Summit em África. Antes de ires: pitch de 60 segundos, perfil do LinkedIn atualizado e uma lista de 10 pessoas com quem queres falar.",
+      "destaque": "1.º em África"
+    },
+    {
+      "titulo": "3. Fundo Morabeza: prepara o teu dossier",
+      "texto": "Lançado com o Banco Africano de Desenvolvimento, arrancou com 24 M€ para startups tecnológicas, com atenção especial a jovens e mulheres. Quando abrirem chamadas, ganha quem já tem contas, métricas e plano prontos.",
+      "destaque": "24 M€"
+    },
+    {
+      "titulo": "4. Pré-incubação Cabo Verde Digital",
+      "texto": "Programa do Governo, com a Pró-Empresa e o Fundo de Promoção do Emprego e Formação, para validar ideias e torná-las negócio. Já teve pelo menos quatro edições. Segue os canais oficiais e tem a tua ideia escrita numa página.",
+      "destaque": null
+    },
+    {
+      "titulo": "5. Parque Tecnológico: Praia e Mindelo",
+      "texto": "O Parque Tecnológico tem polos na Praia e em Mindelo e é parceiro na organização do Web Summit Spotlight. É o sítio para conhecer outras startups, eventos e parceiros. Vai lá, apresenta-te e pergunta o que está aberto.",
+      "destaque": null
+    },
+    {
+      "titulo": "Porque agora: o ecossistema está a crescer",
+      "texto": "Segundo o Governo, Cabo Verde chegou ao 74.º lugar mundial no índice de ecossistemas de startups da StartupBlink em 2026, a melhor posição de sempre do país. As portas estão abertas. Falta entrar.",
+      "destaque": "74.º lugar"
+    }
+  ],
+  "cta_titulo": "Qual destas portas vais abrir primeiro? Diz nos comentários.",
+  "legenda": "Cabo Verde está a construir a rampa. A pergunta é quem vai usá-la.\n\nEm dezembro, o país recebe o Web Summit Spotlight, o primeiro evento da marca Web Summit em África. Mas o evento é só a montra. O trabalho faz-se antes.\n\nTrês passos para esta semana:\n1. Escreve a tua ideia numa página: problema, cliente, como ganhas dinheiro. Serve para a pré-incubação, para o Fundo Morabeza e para qualquer conversa com investidores.\n2. Se te faltam competências digitais, não esperes por um curso pago. O Skodji Digital é gratuito, é feito quase todo à distância e é financiado pelo Banco Mundial. Acompanha as candidaturas em skodjidigital.cv.\n3. Organiza os números, mesmo que sejam pequenos: vendas, utilizadores, custos. Quem chega com dados é levado a sério.\n\nEstás na diáspora? A primeira fase do Skodji Digital juntou participantes de todas as ilhas e de fora do país. Estar longe já não é desculpa.\n\nComo empreendedor cabo-verdiano que voltou para construir aqui, vejo que as oportunidades raramente faltam. Falta preparação para as agarrar no momento certo.\n\nQual destas cinco vais usar primeiro? Diz-me nos comentários.\n\nGuarda este post e partilha com quem está a pensar lançar um negócio em Cabo Verde.\n\nFonte: Governo de Cabo Verde, Forbes África Lusófona, Tech Africa News",
+  "hashtags": [
+    "tecnologia",
+    "empreendedorismo",
+    "startups",
+    "caboverde",
+    "transformacaodigital"
+  ],
+  "alt_text": "Carrossel com 5 recursos digitais em Cabo Verde: formação gratuita Skodji Digital, Web Summit Spotlight em dezembro, Fundo Morabeza de 24 M€, pré-incubação Cabo Verde Digital e Parque Tecnológico.",
+  "fontes": [
+    "https://www.governo.cv/cabo-verde-acolhe-primeiro-evento-web-summit-em-africa-com-realizacao-do-web-summit-spotlight-em-dezembro-de-2026/",
+    "https://forbesafricalusofona.com/?p=172989",
+    "https://techafricanews.com/2026/02/02/cabo-verde-launches-skodji-digital-with-3000-youth-opportunities/",
+    "https://forbesafricalusofona.com/?p=163653",
+    "https://forbesafricalusofona.com/?p=58273",
+    "https://www.forbesargentina.com/negocios/el-proximo-silicon-valley-africano-como-cabo-verde-rival-enfrenta-argentina-transformo-iman-startups-tecnologico-n93235",
+    "https://lp.startupblink.com/report/"
+  ],
+  "id": "20261126-1528",
+  "images": [
+    "01.jpg",
+    "02.jpg",
+    "03.jpg",
+    "04.jpg",
+    "05.jpg",
+    "06.jpg",
+    "07.jpg",
+    "08.jpg"
+  ]
+}

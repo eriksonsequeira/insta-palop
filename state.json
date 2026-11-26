@@ -6,8 +6,17 @@
       "pilar": "ia",
       "formato": "noticia-explicada",
       "tema": "Carrinho Agri investe milhões em plataforma agrícola com IA em Angola (Digital Summit Angola 2026)",
-      "status": "publicado",
+      "status": "apagado",
       "permalink": "https://www.instagram.com/p/DgNajXjoPnK/"
+    },
+    {
+      "id": "20261126-1528",
+      "created": "2026-11-26T15:28+00:00",
+      "pilar": "tecnologia",
+      "formato": "lista-pratica",
+      "tema": "5 programas e recursos digitais de Cabo Verde para startups e jovens (Skodji Digital, Web Summit Spotlight, Fundo Morabeza, pré-incubação, TechPark)",
+      "status": "rascunho",
+      "permalink": null
     }
   ]
 }
