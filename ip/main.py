@@ -48,6 +48,11 @@ def create(hint: str = "") -> str:
     DRAFTS.mkdir(exist_ok=True)
     (DRAFTS / f"{post_id}.json").write_text(json.dumps(post.model_dump(), ensure_ascii=False, indent=2))
     files = render(post, MEDIA / post_id)
+    try:
+        from .render import render_story
+        render_story(post, MEDIA / post_id)
+    except Exception as e:  # noqa: BLE001 — o Story nunca bloqueia o post
+        print(f"[story] falhou a gerar: {e}")
     data = post.model_dump() | {"id": post_id, "images": [f.name for f in files]}
     (DRAFTS / f"{post_id}.json").write_text(json.dumps(data, ensure_ascii=False, indent=2))
     (DRAFTS / f"{post_id}.md").write_text(review_md(data))
@@ -82,10 +87,17 @@ def publish(post_id: str) -> str:
                 break
             time.sleep(10)
     link = instagram.publish_carousel(urls, caption(d), d.get("alt_text", ""))
+    print(f"[ig] publicado: {link}")
+    story_url = f"{MEDIA_BASE_URL}/{post_id}/story.jpg"
+    if os.environ.get("STORIES", "1") == "1" and requests.head(story_url, timeout=20).status_code == 200:
+        try:
+            instagram.publish_story(story_url)
+            print("[ig] story publicado")
+        except Exception as e:  # noqa: BLE001
+            print(f"[ig] story falhou: {e}")
     st = state.load()
     state.record(st, post_id, d, "publicado", link)
     state.save(st)
-    print(f"[ig] publicado: {link}")
     _out("permalink", link)
     return link
 

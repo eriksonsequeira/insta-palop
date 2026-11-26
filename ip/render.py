@@ -52,6 +52,65 @@ def build_html(post: Post) -> str:
     return tpl.replace("__ACCENT__", ACCENTS[post.pilar]).replace("__SLIDES__", "\n".join(parts))
 
 
+def build_story_html(post: Post) -> str:
+    """Story 1080x1920: título + dado principal + chamada para o post. Respeita as zonas seguras (topo/fundo)."""
+    big = ""
+    if post.story_gancho:
+        big = f'<div class="story-fact"><p class="hook">{escape(post.story_gancho)}</p></div>'
+
+    section = (
+        f'<section class="slide story"><div class="chip">{LABELS[post.pilar]}</div>'
+        f"<h1>{_cover_title(post.capa_titulo)}</h1>"
+        f'<p class="sub">{escape(post.capa_subtitulo)}</p>{big}'
+        f'<div class="story-cta"><span>Novo post no meu perfil</span><b>→</b></div>'
+        f'<div class="story-handle">{escape(IG_HANDLE)}</div></section>'
+    )
+    extra = """<style>
+  .slide.story { height: 1920px; padding: 250px 88px 340px; }
+  .slide.story h1 { margin-top: 64px; font-size: 118px; }
+  .slide.story .sub { font-size: 44px; }
+  .story-fact { margin-top: 80px; padding-top: 48px; border-top: 2px solid rgba(244,241,234,.12); }
+  .story-fact .big { margin: 0; }
+  .hook { font: 600 54px/1.25 "Space Grotesk", sans-serif; color: var(--ink); letter-spacing: -.01em; text-wrap: balance; }
+  .fact-label { font: 500 38px/1.3 Inter, sans-serif; color: var(--muted); margin-top: 16px; }
+  .story-cta { margin-top: auto;
+    display: flex; justify-content: space-between; align-items: center;
+    background: var(--accent); color: #0A0E1A; border-radius: 28px; padding: 36px 44px;
+    font: 700 46px/1 "Space Grotesk", sans-serif; }
+  .story-cta b { font-size: 60px; }
+  .story-handle { margin-top: 28px; text-align: center; font: 600 32px/1 Inter, sans-serif; color: var(--muted); }
+</style>"""
+    tpl = (TEMPLATES / "carousel.html").read_text()
+    return tpl.replace("__ACCENT__", ACCENTS[post.pilar]).replace("</head>", extra + "</head>").replace("__SLIDES__", section)
+
+
+def _shoot(html_text: str, out_dir: Path, name: str, size: tuple[int, int], page) -> list[Path]:
+    html = out_dir / f"_{name}.html"
+    html.write_text(html_text)
+    page.set_viewport_size({"width": size[0], "height": size[1]})
+    page.goto(html.resolve().as_uri(), wait_until="networkidle")
+    page.evaluate("document.fonts.ready")
+    files = []
+    els = page.query_selector_all("section.slide")
+    for i, el in enumerate(els, start=1):
+        f = out_dir / (f"{name}.jpg" if len(els) == 1 and name == "story" else f"{i:02d}.jpg")
+        el.screenshot(path=str(f), type="jpeg", quality=92)
+        files.append(f)
+    html.unlink()
+    return files
+
+
+def render_story(post: Post, out_dir: Path) -> Path:
+    from playwright.sync_api import sync_playwright
+
+    out_dir.mkdir(parents=True, exist_ok=True)
+    with sync_playwright() as p:
+        browser = p.chromium.launch()
+        f = _shoot(build_story_html(post), out_dir, "story", (1080, 1920), browser.new_page())[0]
+        browser.close()
+    return f
+
+
 def render(post: Post, out_dir: Path) -> list[Path]:
     from playwright.sync_api import sync_playwright
 

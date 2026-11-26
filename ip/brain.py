@@ -58,6 +58,7 @@ FORMATO DOS SLIDES (carrossel 4:5):
 - capa_titulo: gancho forte, máx. 60 caracteres. capa_subtitulo: máx. 90.
 - 4 a 6 slides de conteúdo: titulo máx. 55 caracteres; texto máx. 230 caracteres;
   destaque opcional (número ou frase muito curta, máx. 18 caracteres) — só se for um dado confirmado.
+- story_gancho: uma frase para o Story que se percebe sozinha (sem precisar do resto do post), máx. 110 caracteres.
 - cta_titulo: fecho com uma ideia-chave ou pergunta para comentários (máx. 70 caracteres).
 
 LEGENDA: 600–1500 caracteres. Primeira linha = gancho. Desenvolve com valor extra (não repitas só os slides),
@@ -84,6 +85,8 @@ class Post(BaseModel):
     legenda: str
     hashtags: list[str]
     alt_text: str = Field(description="descrição acessível do carrossel, máx. 250 caracteres")
+    story_gancho: str = Field(default="", description="frase curta para o Story (máx. 110 caracteres) que faz "
+                              "a pessoa querer ver o post; autoexplicativa e factual, pode incluir um número confirmado")
     fontes: list[str]
 
 

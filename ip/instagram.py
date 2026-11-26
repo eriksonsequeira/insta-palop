@@ -54,6 +54,14 @@ def publish_carousel(image_urls: list[str], caption: str, alt_text: str = "") ->
     return _req("GET", media_id, fields="permalink").get("permalink", "")
 
 
+def publish_story(image_url: str) -> str:
+    """Publica um Story de imagem e devolve o id."""
+    uid = me()["user_id"]
+    c = _req("POST", f"{uid}/media", image_url=image_url, media_type="STORIES")["id"]
+    _wait(c)
+    return _req("POST", f"{uid}/media_publish", creation_id=c)["id"]
+
+
 def recent_captions(limit: int = 30) -> list[str]:
     uid = me()["user_id"]
     data = _req("GET", f"{uid}/media", fields="caption,media_type,timestamp,like_count,comments_count", limit=limit)
