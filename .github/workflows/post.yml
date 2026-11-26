@@ -2,11 +2,8 @@ name: Criar post
 
 on:
   schedule:
-    # 3 posts/dia. Horas em UTC → Luanda/Lisboa(inverno) +1/+0, Maputo +2, Praia -1.
-    # O GitHub pode atrasar alguns minutos (por vezes mais) — por isso não usamos horas "redondas".
-    - cron: "17 7 * * *"    # ~08:15 Luanda · 09:15 Maputo
-    - cron: "43 11 * * *"   # ~12:45 Luanda · 13:45 Maputo (hora de almoço)
-    - cron: "23 18 * * *"   # ~19:20 Luanda · 20:20 Maputo (noite, pico)
+    # 1 carrossel/dia (os Reels têm ~4x mais alcance; ver aprendizagens.md). Horas em UTC = Lisboa no inverno.
+    - cron: "43 11 * * *"   # ~11:45 Lisboa · 12:45 Luanda (hora de almoço)
   workflow_dispatch:
     inputs:
       hint:

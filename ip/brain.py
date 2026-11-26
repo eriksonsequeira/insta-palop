@@ -146,7 +146,8 @@ def build_prompt(pilar: str, formato: str, history: list[dict], hint: str = "", 
 
 
 def _system() -> str:
-    return SYSTEM.replace("{hoje}", datetime.now(timezone.utc).strftime("%d/%m/%Y"))
+    from .learn import for_prompt
+    return SYSTEM.replace("{hoje}", datetime.now(timezone.utc).strftime("%d/%m/%Y")) + for_prompt()
 
 
 def _parse_cli(prompt: str, model=None, tools: str = "WebSearch,WebFetch", cwd: str | None = None, system: bool = True):

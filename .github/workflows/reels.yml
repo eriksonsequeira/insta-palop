@@ -2,8 +2,9 @@ name: Reel diário
 
 on:
   schedule:
-    # 1 Reel/dia a partir do último post publicado (~13:30 Luanda · 11:30 Praia · 14:30 Maputo)
-    - cron: "29 12 * * *"
+    # 2 Reels/dia. Manhã: tema novo pesquisado. Noite: o carrossel do dia em vídeo (ou tema novo).
+    - cron: "17 8 * * *"    # ~08:15 Lisboa · 09:15 Luanda
+    - cron: "13 19 * * *"   # ~19:15 Lisboa · 20:15 Luanda (pico da noite)
   workflow_dispatch:
     inputs:
       post_id:
@@ -65,7 +66,7 @@ jobs:
           if [ "${{ inputs.dry_run }}" = "1" ]; then exit 0; fi
           git config user.name "insta-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add media state.json && git commit -m "novo reel" && git push
+          git add media drafts state.json && git commit -m "novo reel" && git push
       - name: Guardar vídeo de teste
         if: inputs.dry_run == '1'
         uses: actions/upload-artifact@v4

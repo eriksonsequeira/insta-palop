@@ -162,9 +162,15 @@ def create_reel(post_id: str | None = None) -> str:
     st = state.load()
     if not post_id:
         cands = [p for p in st["posts"] if p["status"] == "publicado" and not p.get("reel")]
-        if not cands:
-            raise SystemExit("Nenhum post publicado sem Reel.")
-        post_id = cands[-1]["id"]
+        if cands:
+            post_id = cands[-1]["id"]
+        else:  # sem carrossel por converter: pesquisa um tema novo só para Reel
+            post_id = create(os.environ.get("HINT", ""))
+            st = state.load()
+            for p in st["posts"]:
+                if p["id"] == post_id:
+                    p["status"] = "so-reel"
+            state.save(st)
     d = json.loads((DRAFTS / f"{post_id}.json").read_text())
     reel.build(d, MEDIA / post_id)
     for p in st["posts"]:
@@ -216,6 +222,9 @@ def main(argv: list[str]) -> None:
         create(hint)
     elif cmd == "publish":
         publish(argv[1])
+    elif cmd == "learn":
+        from . import learn
+        learn.run()
     elif cmd == "stats":
         from . import stats
         stats.collect()

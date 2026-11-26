@@ -2,10 +2,9 @@ name: Stories avulsos
 
 on:
   schedule:
-    # 3 Stories avulsos/dia, entre os posts (UTC → Luanda +1, Cabo Verde -1, Maputo +2)
-    - cron: "47 9 * * *"    # ~10:45 Luanda · 08:45 Praia
-    - cron: "13 15 * * *"   # ~16:15 Luanda · 14:15 Praia
-    - cron: "53 20 * * *"   # ~21:50 Luanda · 19:50 Praia
+    # 2 Stories avulsos/dia, espaçados (Stories em série perdem público — ver aprendizagens.md)
+    - cron: "13 15 * * *"   # ~15:15 Lisboa
+    - cron: "53 21 * * *"   # ~21:50 Lisboa
   workflow_dispatch:
     inputs:
       story_id:

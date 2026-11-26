@@ -1,0 +1,18 @@
+# Aprendizagens (atualizado 26/11/2026)
+
+A conta está parada nos 4079 seguidores. Só há dois registos do mesmo dia (26/11/2026, com 3 horas de intervalo), por isso ainda não dá para ver uma tendência, e quase nenhuma publicação regista seguidores ganhos (só 1, num post de feed de outubro de 2026). O conteúdo automático de hoje tem alcance muito baixo: posts de feed com 20–29 contas, stories com 11–66 e o reel do GTA VI com 125 em poucas horas. Os reels pessoais de novembro de 2025 chegavam a 600–1115 contas e tinham 8–16 comentários. Atenção: o 'alcance' dos reels de 2023–24 (3–114) não bate certo com as visualizações (600–5400), provavelmente por uma mudança de métrica na API. Para esse período comparei visualizações e gostos, não alcance. São poucos dados recentes, por isso as conclusões são provisórias.
+
+## Fazer mais
+- Dar prioridade a REELS em vez de FEED: hoje, o reel do GTA VI chegou a 125 contas e 179 visualizações, contra 20–29 contas e 67–92 visualizações nos três posts de feed sobre temas parecidos (IA, Cabo Verde). Isto dá cerca de 5x mais alcance.
+- Os conteúdos pessoais na primeira pessoa são os únicos que geram conversa. Os reels de novembro de 2025 sobre o regresso ao país, o domingo e o 'caminho' tiveram 926–1115 de alcance, 8–16 comentários e 6–10 partilhas. Os reels de tecnologia tiveram 0–4 comentários e quase nenhuma partilha. Vale a pena juntar ao conteúdo automático pelo menos 1 reel pessoal por semana.
+- Nos ganchos pessoais, a história concreta ganha à frase motivacional genérica. 'Depois de 20 anos, voltei ao meu país…' teve 971 de alcance, 16 comentários e 10 partilhas. 'Terça é para acelerar. Sem desculpas…' teve 293 de alcance, 0 comentários e 0 partilhas.
+- Nos reels de tecnologia, começar a legenda pela cena visual concreta funciona melhor. 'Robô reagindo ao se ver no espelho' teve 4707 visualizações e 351 gostos, os robôs no restaurante 4539 e 195, o estacionamento paralelo 3406 e 115, e os robôs da Amazon 3183 e 85. Os ganchos genéricos 'Descubra…' ou 'Prepare-se para uma revolução…' ficaram, em média, perto das 1000 visualizações e 2–27 gostos (Amazon medicina: 276 e 2; apresentadores de IA: 590 e 4).
+- Para gostos e guardados, o melhor tema histórico é a tecnologia muito visual: robôs, gadgets e veículos. O vídeo do robô ao espelho teve 17 guardados e os óculos com legendas para surdos tiveram 8. Os temas de negócio e ecossistema (IA nas PME, Web Summit em Cabo Verde) em feed de texto ficaram nos 0–2 gostos.
+- Hora: os reels de 2023 publicados às 18h00 e os pessoais de 2025 publicados entre as 20h e as 21h tiveram bons resultados. Hoje, o reel das 18h21 superou todos os posts das 15h30–16h30. Por agora, convém testar publicar entre as 18h e as 21h. O formato confunde a comparação, por isso é um indício fraco.
+- Stories em série perdem público a cada uma: a sequência das 16h11 às 16h31 caiu de 44 para 33 de alcance. A story isolada da meia-noite chegou a 66. É melhor fazer poucas stories (1–3) e usá-las para encaminhar para o reel do dia.
+
+## Evitar
+- Posts de FEED só com texto ou imagem sobre notícias e dados (IA nas PME, Cabo Verde, GTA VI em feed): 20–29 de alcance e 0–2 gostos cada.
+- Ganchos promocionais genéricos ('Descubra…', 'Prepare-se…', 'Preparem-se para uma revolução…'): estão sistematicamente entre os reels de tecnologia com menos visualizações e gostos.
+- Frases motivacionais vazias sem história pessoal ('Terça é para acelerar…'): têm cerca de um terço do alcance dos reels pessoais com uma narrativa concreta.
+- Publicar várias stories seguidas em minutos (5 stories entre as 16h11 e as 16h31): o alcance cai a cada uma e nenhuma trouxe seguidores.
