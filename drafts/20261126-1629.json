@@ -1,0 +1,68 @@
+{
+  "pilar": "ia",
+  "formato": "hype",
+  "tema": "Lançamento recorde do GTA VI (3,79 mil milhões no 1.º dia), feito sem IA generativa, e lições de IA e negócio",
+  "capa_titulo": "GTA VI: 3,79 mil milhões num dia, sem IA generativa",
+  "capa_subtitulo": "O maior lançamento do entretenimento e o que ensina sobre IA e negócios",
+  "slides": [
+    {
+      "titulo": "O maior lançamento da história do entretenimento",
+      "texto": "O GTA VI saiu a 19 de novembro e faturou cerca de 3,79 mil milhões de dólares em vendas no 1.º dia, segundo a Take-Two. A Rockstar chama-lhe o maior lançamento de entretenimento de sempre. É uma estimativa da empresa.",
+      "destaque": "3,79 mil milhões $"
+    },
+    {
+      "titulo": "32,5 milhões vendidos antes de sair",
+      "texto": "Antes do lançamento já tinham sido vendidas 32,5 milhões de unidades, um recorde segundo a Rockstar. A pré-venda provou a procura antes do dia 1. Lição: valida o interesse e recebe antes de escalar.",
+      "destaque": "32,5 milhões"
+    },
+    {
+      "titulo": "Quase 5 vezes o GTA V",
+      "texto": "Em 2013, o GTA V fez cerca de 800 milhões de dólares no 1.º dia, segundo a Reuters. E continua a vender: quase 235 milhões de unidades desde então. Um produto bem feito fatura durante mais de uma década.",
+      "destaque": "~235 milhões"
+    },
+    {
+      "titulo": "Feito à mão, sem IA generativa",
+      "texto": "Segundo o CEO da Take-Two, Strauss Zelnick, a IA generativa não teve qualquer papel na criação do jogo. \"Os mundos deles são feitos à mão. É isso que os diferencia\", disse ao Business Insider.",
+      "destaque": null
+    },
+    {
+      "titulo": "Mas a empresa usa IA todos os dias",
+      "texto": "A Take-Two dá aos funcionários versões empresariais do ChatGPT e do Claude e tem cerca de 200 projetos internos de IA para produtividade, testes e otimização. A IA está na operação, não na parte criativa.",
+      "destaque": "~200 projetos"
+    },
+    {
+      "titulo": "A expectativa também é um ativo",
+      "texto": "O 1.º trailer, lançado em dezembro de 2023, teve 90,4 milhões de visualizações no YouTube em 24 horas: recorde do Guinness para a revelação de um videojogo. A procura começou a construir-se quase 3 anos antes.",
+      "destaque": "90,4 milhões"
+    }
+  ],
+  "cta_titulo": "IA na operação, criatividade humana no produto: concordas?",
+  "legenda": "O jogo que bateu todos os recordes do entretenimento foi feito sem IA generativa.\n\nO GTA VI saiu a 19 de novembro e, segundo a Take-Two, faturou cerca de 3,79 mil milhões de dólares em vendas no primeiro dia. Para teres uma ideia, \"Vingadores: Endgame\" fez cerca de 2,94 mil milhões em toda a carreira nos cinemas. São medidas diferentes, mas a escala é clara. A crítica também ajudou: 99 em 100 no Metacritic.\n\nO mais interessante para quem empreende é como a Take-Two usa a IA. Não é contra a tecnologia: os funcionários têm ChatGPT e Claude e há cerca de 200 projetos internos para testes, produtividade e otimização. Mas a parte que o cliente vê e paga (o mundo, as personagens, a história) continua nas mãos de pessoas.\n\nEsta divisão serve para qualquer negócio, em Cabo Verde, Angola, Moçambique ou Portugal. Usa a IA para responder a e-mails, organizar stock, preparar relatórios ou testar ideias. Mas o que te distingue (o teu serviço, a tua marca, a relação com o cliente) não se copia com uma ferramenta. Como diz o próprio CEO da Take-Two, as ferramentas sozinhas não criam grandes produtos.\n\nOutra lição: 32,5 milhões de unidades vendidas antes do lançamento. Antes de investir tudo, testa a procura com uma pré-venda, mesmo que seja pequena, com pagamento por vinti4, Multicaixa Express ou M-Pesa.\n\nE tu, onde é que já usas IA no teu negócio, e onde é que nunca a usarias? Conta nos comentários.\n\nGuarda este post e partilha com quem está a construir algo.\n\nFonte: Fox Business, ABC News, Deadline, The Next Web, Push Square",
+  "hashtags": [
+    "gta6",
+    "inteligenciaartificial",
+    "empreendedorismo",
+    "negociosdigitais",
+    "palop"
+  ],
+  "alt_text": "Carrossel sobre o lançamento recorde do GTA VI: 3,79 mil milhões de dólares no 1.º dia, 32,5 milhões vendidos em pré-venda, criação sem IA generativa e como a Take-Two usa IA na operação.",
+  "story_gancho": "O GTA VI fez 3,79 mil milhões de dólares num só dia. E o CEO garante: sem IA generativa.",
+  "fontes": [
+    "https://www.foxbusiness.com/entertainment/grand-theft-auto-vi-shatters-entertainment-records-staggering-3-79b-debut",
+    "https://abcnews.com/GMA/Culture/grand-theft-auto-vi-breaks-1st-day-sales-record/story?id=138328412",
+    "https://deadline.com/2026/11/gta6-first-day-sales-4-billion-1237230465/",
+    "https://thenextweb.com/news/take-two-gta6-no-generative-ai-handcrafted",
+    "https://pushsquare.com/news/2023/12/gta-6-trailer-pulls-90-million-views-in-24-hours-sets-new-world-records"
+  ],
+  "id": "20261126-1629",
+  "images": [
+    "01.jpg",
+    "02.jpg",
+    "03.jpg",
+    "04.jpg",
+    "05.jpg",
+    "06.jpg",
+    "07.jpg",
+    "08.jpg"
+  ]
+}
