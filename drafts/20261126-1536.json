@@ -1,0 +1,67 @@
+{
+  "pilar": "negocios",
+  "formato": "mito-realidade",
+  "tema": "Mitos sobre IA nas pequenas empresas desmontados por inquéritos recentes (Câmara de Comércio EUA, Gusto, Verizon)",
+  "capa_titulo": "IA nas pequenas empresas: 5 mitos que os dados desmontam",
+  "capa_subtitulo": "Inquéritos recentes nos EUA mostram como os pequenos negócios usam mesmo a IA",
+  "slides": [
+    {
+      "titulo": "Mito: a IA é só para grandes empresas",
+      "texto": "Realidade: 66% das pequenas empresas nos EUA já usam IA. Em 2023 eram 23%. Quase o triplo em três anos, segundo a Câmara de Comércio dos EUA.",
+      "destaque": "66%"
+    },
+    {
+      "titulo": "Mito: a IA serve para despedir pessoas",
+      "texto": "Realidade: só 6% das pequenas empresas dizem que a IA lhes permite reduzir pessoal. Muitas mais dizem que está a criar empregos. E 95% das que usam IA estão a investir na formação da equipa.",
+      "destaque": "6%"
+    },
+    {
+      "titulo": "Mito: quem usa IA já a domina",
+      "texto": "Realidade: 67% usam IA, mas só 15% a usam com regularidade em várias funções e apenas 5% a têm integrada em todo o negócio. 19% ainda estão a experimentar (Gusto, 1731 donos de negócios).",
+      "destaque": "5%"
+    },
+    {
+      "titulo": "Mito: com IA não são precisas regras",
+      "texto": "Realidade: só 25% das pequenas empresas com funcionários têm uma política de IA. Há um ano eram 15%. Definir o que se pode partilhar com a IA protege clientes e dados.",
+      "destaque": "25%"
+    },
+    {
+      "titulo": "Mito: a IA é coisa para daqui a uns anos",
+      "texto": "Realidade: num inquérito da Verizon a 600 donos de negócios, 45% planeiam usar IA para simplificar a operação nesta época festiva. Só as redes sociais ficam à frente, com 53%.",
+      "destaque": "45%"
+    },
+    {
+      "titulo": "E nos PALOP, o que isto significa?",
+      "texto": "Os dados são dos EUA, mas a lição viaja: começa por uma tarefa (respostas a clientes, posts, orçamentos), cria regras simples e forma a equipa. Não precisas de ser grande para começar.",
+      "destaque": null
+    }
+  ],
+  "cta_titulo": "Qual destes mitos ainda ouves no teu meio? Comenta 👇",
+  "legenda": "A IA não é um luxo das grandes empresas. Os números mais recentes mostram o contrário.\n\nNos EUA, dois terços das pequenas empresas já usam IA. Mas há um detalhe que quase ninguém comenta: usar não é o mesmo que tirar partido. Segundo o relatório da Gusto, a maioria ainda está a experimentar ou a usar IA em tarefas soltas. Só uma pequena minoria a integrou a sério no negócio.\n\nE isso é uma boa notícia para quem está a começar. A corrida ainda vai no início.\n\nO que separa quem experimenta de quem cresce:\n1. Escolhe um problema concreto. Ex.: responder mais depressa a clientes, preparar orçamentos, criar conteúdo para as redes.\n2. Mede o tempo poupado. Se não poupas tempo nem ganhas vendas, muda de ferramenta ou de tarefa.\n3. Define regras. Que dados de clientes nunca entram numa ferramenta de IA? Quem revê o que sai?\n4. Forma a equipa. Segundo a Câmara de Comércio dos EUA, quase todas as pequenas empresas que usam IA estão a investir na formação das pessoas.\n\nPara quem está nos PALOP, seja um alojamento turístico, uma loja que vende pelo WhatsApp ou uma consultora, a pergunta não é \"se\" mas \"por onde começar\". Como empreendedor cabo-verdiano, vejo a IA como uma forma de equipas pequenas competirem com estruturas maiores, desde que haja disciplina no uso.\n\nQual seria a primeira tarefa que entregavas à IA no teu negócio?\n\nGuarda este post e partilha com quem ainda acha que a IA \"não é para pequenos\".\n\nFonte: U.S. Chamber of Commerce, Gusto (via CPA Practice Advisor), Verizon",
+  "hashtags": [
+    "inteligenciaartificial",
+    "pequenasempresas",
+    "empreendedorismo",
+    "negociosdigitais",
+    "palop"
+  ],
+  "alt_text": "Carrossel com 5 mitos sobre IA nas pequenas empresas e a realidade segundo inquéritos recentes nos EUA: 66% já usam IA, só 6% cortaram pessoal, 5% integraram-na em todo o negócio, e o que isto significa para os PALOP.",
+  "fontes": [
+    "https://www.uschamber.com/technology/2026-empowering-small-business-report",
+    "https://www.uschamber.com/economy/the-chambers-free-enterprise-opportunity-tour-rolls-into-detroit-with-groundbreaking-new-data-on-how-ai-is-creating-small-business-jobs",
+    "https://www.manilatimes.net/2026/11/25/tmt-newswire/globenewswire/us-chamber-of-commerce-report-ai-is-creating-small-business-jobs-not-just-replacing-them-in-discussion-with-yourupdatetv/2477559",
+    "https://www.cpapracticeadvisor.com/2026/11/12/small-business-owners-are-more-confident-in-their-own-companies-than-in-the-economy-and-two-thirds-use-ai/193807/",
+    "https://www.verizon.com/about/news/verizon-survey-small-businesses-social-media-ai-holidays"
+  ],
+  "id": "20261126-1536",
+  "images": [
+    "01.jpg",
+    "02.jpg",
+    "03.jpg",
+    "04.jpg",
+    "05.jpg",
+    "06.jpg",
+    "07.jpg",
+    "08.jpg"
+  ]
+}
