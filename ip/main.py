@@ -116,6 +116,10 @@ def main(argv: list[str]) -> None:
         create(hint)
     elif cmd == "publish":
         publish(argv[1])
+    elif cmd == "story":
+        from . import instagram
+        instagram.publish_story(f"{MEDIA_BASE_URL}/{argv[1]}/story.jpg")
+        print("[ig] story publicado")
     elif cmd == "discard":
         discard(argv[1])
     elif cmd == "refresh-token":
