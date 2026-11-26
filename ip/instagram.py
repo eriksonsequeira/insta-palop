@@ -3,7 +3,7 @@ import time
 
 import requests
 
-from .config import IG_ACCESS_TOKEN, IG_API_VERSION, IG_GRAPH_HOST
+from .config import IG_ACCESS_TOKEN, IG_API_VERSION, IG_GRAPH_HOST, IG_USER_ID
 
 BASE = f"{IG_GRAPH_HOST}/{IG_API_VERSION}"
 
@@ -21,7 +21,8 @@ def _req(method: str, path: str, **params) -> dict:
 
 
 def me() -> dict:
-    return _req("GET", "me", fields="user_id,username,account_type,media_count")
+    d = _req("GET", IG_USER_ID, fields="id,username,media_count,followers_count")
+    return d | {"user_id": d["id"]}
 
 
 def _wait(container_id: str, timeout: int = 300) -> None:

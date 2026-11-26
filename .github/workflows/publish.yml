@@ -1,0 +1,36 @@
+name: Publicar post existente
+
+on:
+  workflow_dispatch:
+    inputs:
+      post_id:
+        description: "ID do post em drafts/ (ex.: 20261126-1530)"
+        required: true
+
+concurrency:
+  group: ip-state
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pydantic requests
+      - env:
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          POST_ID: ${{ inputs.post_id }}
+        run: |
+          python -m ip.main publish "$POST_ID"
+          git config user.name "insta-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add state.json && git commit -m "publicado $POST_ID" && git push

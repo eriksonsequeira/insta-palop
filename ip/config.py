@@ -20,9 +20,10 @@ BRAND_NAME = env("BRAND_NAME", "")
 # --- Claude ---
 CLAUDE_MODEL = env("CLAUDE_MODEL", "claude-opus-5-5")
 
-# --- Instagram (Instagram API com login do Instagram; não precisa de Página do Facebook) ---
+# --- Instagram (token de utilizador do sistema via "Unified login" — não expira) ---
 IG_ACCESS_TOKEN = env("IG_ACCESS_TOKEN")
-IG_GRAPH_HOST = env("IG_GRAPH_HOST", "https://graph.instagram.com")  # ou https://graph.facebook.com
+IG_GRAPH_HOST = env("IG_GRAPH_HOST", "https://graph.facebook.com")
+IG_USER_ID = env("IG_USER_ID", "17841401299635844")  # @erikson_sequeira
 IG_API_VERSION = env("IG_API_VERSION", "v23.0")
 
 # 1 (omissão) = publica logo; 0 = abre uma Issue no GitHub para aprovares (comenta "ok" para publicar)

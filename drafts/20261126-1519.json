@@ -1,0 +1,66 @@
+{
+  "pilar": "ia",
+  "formato": "noticia-explicada",
+  "tema": "Carrinho Agri investe milhões em plataforma agrícola com IA em Angola (Digital Summit Angola 2026)",
+  "capa_titulo": "IA contra a seca: a aposta da Carrinho em Angola",
+  "capa_subtitulo": "Vários milhões de dólares em tecnologia agrícola. O que aconteceu e o que muda para ti.",
+  "slides": [
+    {
+      "titulo": "O que aconteceu",
+      "texto": "No Digital Summit Angola 2026, em Luanda, o CEO da Carrinho Agri, David Maciel, revelou que a empresa está a investir vários milhões de dólares numa plataforma tecnológica própria para gerir a produção agrícola.",
+      "destaque": null
+    },
+    {
+      "titulo": "O que a plataforma já faz",
+      "texto": "Identifica produtores, localiza fazendas e acompanha áreas cultivadas e níveis de produção. Gere a logística, da entrega de insumos à recolha da colheita. O plano é ligar também bancos e seguradoras.",
+      "destaque": null
+    },
+    {
+      "titulo": "Onde entra a inteligência artificial",
+      "texto": "A empresa está a começar a integrar previsão de chuva com IA, deteção precoce de doenças nas culturas e algoritmos para correção de solos e adubação. Um técnico poderá fotografar um campo e receber uma primeira orientação.",
+      "destaque": null
+    },
+    {
+      "titulo": "Porque importa: a seca já custou caro",
+      "texto": "Na campanha 2025/2026, a seca fez cair a produção cerca de 50% no setor familiar e 30% a 40% nas grandes fazendas. Como a Carrinho financia parte da produção, quando a colheita falha, a empresa também perde.",
+      "destaque": "~50% de perdas"
+    },
+    {
+      "titulo": "A frase que resume a estratégia",
+      "texto": "«Sem o recurso à tecnologia e à inteligência artificial, não conseguimos liderar o agronegócio em Angola», disse David Maciel. Para ele, a escala só se controla com tecnologia.",
+      "destaque": null
+    },
+    {
+      "titulo": "O que muda para ti nos PALOP",
+      "texto": "Primeiro os dados, depois a IA. Sem saber quem produz, onde e quanto, nenhum algoritmo ajuda. Tens um negócio agrícola, uma cooperativa ou uma startup? Começa por registar tudo em formato digital.",
+      "destaque": null
+    }
+  ],
+  "cta_titulo": "A IA não traz chuva, mas ajuda a preparar. Usarias no teu negócio?",
+  "legenda": "A inteligência artificial chegou ao campo angolano. E não foi por moda, foi por causa da seca.\n\nEsta semana, no Digital Summit Angola 2026, em Luanda, a Carrinho Agri contou que está a investir vários milhões de dólares numa plataforma tecnológica própria. O valor exato não foi revelado. Segundo o CEO, David Maciel, é um investimento contínuo em software, equipamento informático e formação das equipas.\n\nO detalhe que muitos vão ignorar: a parte da IA ainda está no início. Antes de pensar em algoritmos, a empresa teve de mapear produtores, fazendas, áreas e produção. Só com essa base faz sentido prever chuva ou detetar doenças nas culturas. Os próximos passos anunciados são acompanhar fatores climáticos e controlar equipamentos de rega.\n\nHá outra peça importante: a ligação a bancos e seguradoras. Um agricultor sem registos dificilmente consegue crédito ou um seguro. Com dados da produção, o risco fica visível e o acesso ao financiamento pode melhorar.\n\nComo empreendedor em Angola, vejo nisto uma lição que serve para qualquer setor: a IA só é útil em cima de dados organizados. Quem começa hoje a digitalizar o negócio está a preparar-se para usar estas ferramentas amanhã.\n\nE tu? Que problema do teu setor resolverias primeiro com dados e IA? Conta nos comentários.\n\nGuarda este post e partilha com quem trabalha na agricultura.\n\nFonte: Forbes África Lusófona, Mercado",
+  "hashtags": [
+    "inteligenciaartificial",
+    "angola",
+    "agrotech",
+    "palop",
+    "empreendedorismo"
+  ],
+  "alt_text": "Carrossel sobre o investimento da Carrinho Agri numa plataforma agrícola com IA em Angola: o que a plataforma faz, previsão de chuva, deteção de doenças, perdas de cerca de 50% causadas pela seca e lições para os PALOP.",
+  "fontes": [
+    "https://forbesafricalusofona.com/carrinho-agri-investe-milhoes-de-dolares-em-tecnologia-para-reforcar-controlo-da-producao-agricola-em-angola/",
+    "https://mercado.co.ao/carrinho-agri-aposta-milhoes-em-tecnologia-para-controlar-a-escala-mas-a-seca-lembra-que-o-ceu-nao-se-programa/",
+    "https://mercado.co.ao/carrinho-agri-investe-milhoes-de-dolares-em-plataforma-tecnologica-para-modernizar-operacoes-agricolas-em-angola/",
+    "https://www.economiaemercado.com/artigo/energia-financas-e-mobilidade-nos-quatro-eixos-do-digital-summit-angola-2026"
+  ],
+  "id": "20261126-1519",
+  "images": [
+    "01.jpg",
+    "02.jpg",
+    "03.jpg",
+    "04.jpg",
+    "05.jpg",
+    "06.jpg",
+    "07.jpg",
+    "08.jpg"
+  ]
+}
