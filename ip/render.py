@@ -2,7 +2,7 @@
 from html import escape
 from pathlib import Path
 
-from .brain import Post
+from .brain import PILL_TIPOS, Post, StoryPill
 from .config import IG_HANDLE, TEMPLATES
 
 ACCENTS = {"ia": "#A78BFA", "tecnologia": "#2DD4BF", "negocios": "#F5B83D"}
@@ -82,6 +82,58 @@ def build_story_html(post: Post) -> str:
 </style>"""
     tpl = (TEMPLATES / "carousel.html").read_text()
     return tpl.replace("__ACCENT__", ACCENTS[post.pilar]).replace("</head>", extra + "</head>").replace("__SLIDES__", section)
+
+
+STORY_CSS = """<style>
+  .slide.story { height: 1920px; padding: 250px 88px 340px; }
+  .slide.story h1 { margin-top: 64px; font-size: 118px; }
+  .slide.story .sub { font-size: 44px; }
+  .story-fact { margin-top: 80px; padding-top: 48px; border-top: 2px solid rgba(244,241,234,.12); }
+  .story-fact .big { margin: 0; }
+  .hook { font: 600 54px/1.25 "Space Grotesk", sans-serif; color: var(--ink); letter-spacing: -.01em; text-wrap: balance; }
+  .story-cta { margin-top: auto; display: flex; justify-content: space-between; align-items: center;
+    background: var(--accent); color: #0A0E1A; border-radius: 28px; padding: 36px 44px;
+    font: 700 46px/1 "Space Grotesk", sans-serif; }
+  .story-cta b { font-size: 60px; }
+  .story-handle { margin-top: 28px; text-align: center; font: 600 32px/1 Inter, sans-serif; color: var(--muted); }
+  .pill .big { margin-top: auto; font-size: 230px; }
+  .pill .big.small { font-size: 150px; }
+  .pill h2 { font-size: 92px; margin-top: 48px; }
+  .pill .big + h2 { margin-top: 28px; }
+  .pill .chip + h2 { margin-top: auto; }
+  .pill .body { margin-top: 44px; font-size: 48px; line-height: 1.4; color: #D9DCE5; }
+  .pill .src { margin-top: 36px; font: 500 30px/1 Inter, sans-serif; color: var(--muted); }
+  .pill .follow { margin-top: 72px; border: 2px solid var(--accent); color: var(--ink); border-radius: 28px;
+    padding: 32px 44px; font: 600 40px/1.2 Inter, sans-serif; text-align: center; }
+  .pill .follow b { color: var(--accent); }
+</style>"""
+
+
+def build_pill_html(p: StoryPill) -> str:
+    big = ""
+    if p.destaque:
+        cls = "big small" if len(p.destaque) > 6 else "big"
+        big = f'<div class="{cls}">{escape(p.destaque)}</div>'
+    section = (
+        f'<section class="slide story pill"><div class="chip">{escape(PILL_TIPOS.get(p.tipo, ("Tech",))[0])}</div>'
+        f"{big}<h2>{escape(p.titulo)}</h2>"
+        f'<p class="body">{escape(p.texto)}</p>'
+        f'<p class="src">Fonte: {escape(p.fonte_nome)}</p>'
+        f'<div class="follow">Segue <b>{escape(IG_HANDLE)}</b> para mais tecnologia, IA e negócios</div></section>'
+    )
+    tpl = (TEMPLATES / "carousel.html").read_text()
+    return tpl.replace("__ACCENT__", ACCENTS[p.pilar]).replace("</head>", STORY_CSS + "</head>").replace("__SLIDES__", section)
+
+
+def render_pill(p: StoryPill, out_dir: Path) -> Path:
+    from playwright.sync_api import sync_playwright
+
+    out_dir.mkdir(parents=True, exist_ok=True)
+    with sync_playwright() as pw:
+        browser = pw.chromium.launch()
+        f = _shoot(build_pill_html(p), out_dir, "story", (1080, 1920), browser.new_page())[0]
+        browser.close()
+    return f
 
 
 def _shoot(html_text: str, out_dir: Path, name: str, size: tuple[int, int], page) -> list[Path]:

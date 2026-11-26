@@ -27,5 +27,15 @@
       "status": "publicado",
       "permalink": "https://www.instagram.com/p/DgNcYSGl9sO/"
     }
+  ],
+  "stories": [
+    {
+      "id": "s20261126-1616",
+      "created": "2026-11-26T16:16+00:00",
+      "tipo": "noticia",
+      "pilar": "ia",
+      "tema": "Tidal proíbe e remove milhões de músicas 100% geradas por IA",
+      "status": "rascunho"
+    }
   ]
 }

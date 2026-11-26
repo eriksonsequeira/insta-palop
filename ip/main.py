@@ -102,6 +102,59 @@ def publish(post_id: str) -> str:
     return link
 
 
+def create_pill(hint: str = "") -> str:
+    from .render import render_pill
+
+    st = state.load()
+    stories = st.setdefault("stories", [])
+    tipo, pilar = brain.choose_pill(stories)
+    print(f"[story] tipo={tipo} pilar={pilar}")
+    history = stories + st["posts"]
+    pill = None
+    for _ in range(2):
+        cand = brain.write_pill(tipo, pilar, history, hint)
+        cand.tipo = tipo
+        v = brain.verify(cand)
+        if v.aprovado:
+            print("[verificação] aprovado")
+            pill = cand
+            break
+        print(f"[verificação] reprovado: {v.problemas}")
+        hint = "Um verificador reprovou a versão anterior por: " + "; ".join(v.problemas)
+    if pill is None:
+        raise SystemExit("Story reprovado duas vezes — nada publicado nesta ronda.")
+    sid = "s" + datetime.now(timezone.utc).strftime("%Y%m%d-%H%M")
+    render_pill(pill, MEDIA / "stories" / sid)
+    (MEDIA / "stories" / sid / "story.json").write_text(pill.model_dump_json(indent=2))
+    stories.append({"id": sid, "created": datetime.now(timezone.utc).isoformat(timespec="minutes"),
+                    "tipo": tipo, "pilar": pilar, "tema": pill.tema, "status": "rascunho"})
+    state.save(st)
+    print(f"[story] {sid}: {pill.tema}")
+    _out("story_id", sid)
+    return sid
+
+
+def publish_pill(sid: str) -> None:
+    import time
+
+    import requests
+
+    from . import instagram
+
+    url = f"{MEDIA_BASE_URL}/stories/{sid}/story.jpg"
+    for _ in range(30):
+        if requests.head(url, timeout=20).status_code == 200:
+            break
+        time.sleep(10)
+    instagram.publish_story(url)
+    st = state.load()
+    for s_ in st.get("stories", []):
+        if s_["id"] == sid:
+            s_["status"] = "publicado"
+    state.save(st)
+    print(f"[ig] story publicado: {sid}")
+
+
 def discard(post_id: str) -> None:
     st = state.load()
     d = json.loads((DRAFTS / f"{post_id}.json").read_text())
@@ -116,6 +169,10 @@ def main(argv: list[str]) -> None:
         create(hint)
     elif cmd == "publish":
         publish(argv[1])
+    elif cmd == "pill":
+        create_pill(os.environ.get("HINT", ""))
+    elif cmd == "publish-pill":
+        publish_pill(argv[1])
     elif cmd == "story":
         from . import instagram
         instagram.publish_story(f"{MEDIA_BASE_URL}/{argv[1]}/story.jpg")

@@ -142,13 +142,14 @@ def _system() -> str:
     return SYSTEM.replace("{hoje}", datetime.now(timezone.utc).strftime("%d/%m/%Y"))
 
 
-def _parse_cli(prompt: str) -> Post:
+def _parse_cli(prompt: str, model=None):
+    model = model or Post
     env = {k: v for k, v in os.environ.items() if k != "ANTHROPIC_API_KEY"}  # usar a subscrição
     cmd = [
         "claude", "-p", f"{_system()}\n\n---\n\n{prompt}",
         "--model", CLAUDE_MODEL, "--output-format", "json",
         "--tools", "WebSearch,WebFetch", "--allowedTools", "WebSearch,WebFetch",
-        "--json-schema", json.dumps(Post.model_json_schema()),
+        "--json-schema", json.dumps(model.model_json_schema()),
     ]
     last = None
     for attempt in range(3):
@@ -156,7 +157,7 @@ def _parse_cli(prompt: str) -> Post:
         try:
             data = json.loads(r.stdout)
             if not data.get("is_error") and data.get("structured_output"):
-                return Post.model_validate(data["structured_output"])
+                return model.model_validate(data["structured_output"])
             last = data.get("result") or data.get("subtype")
         except json.JSONDecodeError:
             last = (r.stderr or r.stdout)[-500:]
@@ -164,9 +165,10 @@ def _parse_cli(prompt: str) -> Post:
     raise RuntimeError(f"Claude Code não devolveu um post válido: {last}")
 
 
-def _parse_api(prompt: str) -> Post:
+def _parse_api(prompt: str, model=None):
+    model = model or Post
     import anthropic
-    schema = json.dumps(Post.model_json_schema(), ensure_ascii=False)
+    schema = json.dumps(model.model_json_schema(), ensure_ascii=False)
     resp = anthropic.Anthropic().messages.create(
         model=CLAUDE_MODEL,
         max_tokens=16000,
@@ -179,7 +181,7 @@ def _parse_api(prompt: str) -> Post:
     m = re.search(r"\{.*\}", text, re.S)
     if not m:
         raise RuntimeError(f"Resposta sem JSON: {text[-400:]}")
-    return Post.model_validate_json(m.group(0))
+    return model.model_validate_json(m.group(0))
 
 
 def write_post(pilar: str, formato: str, history: list[dict], hint: str = "", foco: str = "global") -> Post:
@@ -216,7 +218,7 @@ VERIFY_RULES = """És um verificador de factos rigoroso. Vais receber um post de
 Pequenas questões de estilo NÃO reprovam. Reprova só por erros factuais, linguagem errada ou risco reputacional."""
 
 
-def verify(post: Post) -> Verdict:
+def verify(post: BaseModel) -> Verdict:
     prompt = f"{VERIFY_RULES}\n\nHoje é {datetime.now(timezone.utc):%d/%m/%Y}.\n\nPOST:\n{post.model_dump_json(indent=2)}"
     if os.environ.get("CLAUDE_CODE_OAUTH_TOKEN") or os.environ.get("USE_CLAUDE_CLI") == "1":
         env = {k: v for k, v in os.environ.items() if k != "ANTHROPIC_API_KEY"}
@@ -240,3 +242,54 @@ def verify(post: Post) -> Verdict:
     )
     text = "".join(b.text for b in resp.content if getattr(b, "type", "") == "text")
     return Verdict.model_validate_json(re.search(r"\{.*\}", text, re.S).group(0))
+
+
+# ---------------- Stories avulsos (curiosidades, dados, ferramentas, dicas) ----------------
+
+PILL_TIPOS = {
+    "curiosidade": ("Sabias que?", "Uma curiosidade surpreendente e verdadeira de tecnologia/IA/negócios (invenções, recordes, histórias de empresas, ciência aplicada)."),
+    "dado": ("Dado do dia", "Um número recente e impactante (estudo, relatório, resultados de empresa) — o destaque é esse número."),
+    "ferramenta": ("Ferramenta do dia", "Uma ferramenta/app/site útil (de preferência gratuita) de IA ou produtividade: o que faz e para que serve."),
+    "dica": ("Dica rápida", "Uma dica prática aplicável em 1 minuto (prompt útil, atalho, truque de negócio, segurança digital)."),
+    "noticia": ("Última hora", "Uma notícia das últimas 48 horas de IA, tecnologia ou negócios, explicada numa frase."),
+}
+PILL_CICLO = ["noticia", "curiosidade", "ferramenta", "dado", "dica", "curiosidade"]
+
+
+class StoryPill(BaseModel):
+    tipo: str
+    pilar: Literal["ia", "tecnologia", "negocios"]
+    tema: str = Field(description="tema numa frase curta, para não repetir")
+    titulo: str = Field(description="máx. 70 caracteres, gancho forte")
+    texto: str = Field(description="máx. 190 caracteres, explica/acrescenta valor")
+    destaque: str | None = Field(default=None, description="número ou palavra curta (máx. 12 caracteres), só se confirmado")
+    fonte_nome: str = Field(description="nome do meio/empresa fonte (ex.: Reuters), sem URL")
+    fontes: list[str]
+
+
+def choose_pill(stories: list[dict]) -> tuple[str, str]:
+    tipo = PILL_CICLO[len(stories) % len(PILL_CICLO)]
+    pc = Counter(p["pilar"] for p in stories[-6:])
+    pilar = min(PILARES, key=lambda p: (pc[p], PILARES.index(p)))
+    return tipo, pilar
+
+
+def write_pill(tipo: str, pilar: str, history: list[dict], hint: str = "") -> StoryPill:
+    nomes = {"ia": "Inteligência Artificial", "tecnologia": "Tecnologia", "negocios": "Negócios"}
+    temas = "\n".join(f"- {p['tema']}" for p in history[-60:]) or "(nenhum)"
+    prompt = (
+        f"Cria UM Story de Instagram (uma única imagem vertical, lida em 5 segundos).\n\n"
+        f"TIPO: {tipo} — {PILL_TIPOS[tipo][1]}\nPILAR: {nomes[pilar]} (pilar = \"{pilar}\")\n\n"
+        "Pesquisa na internet primeiro. Pode ser global ou dos PALOP — o que for mais interessante. "
+        "Texto curtíssimo e claro, PT-PT. Não repitas estes temas já usados:\n"
+        f"{temas}\n\n" + (f"Indicação extra: {hint}\n\n" if hint else "")
+        + f'Usa tipo = "{tipo}". Nada de legendas nem hashtags.'
+    )
+    if os.environ.get("CLAUDE_CODE_OAUTH_TOKEN") or os.environ.get("USE_CLAUDE_CLI") == "1":
+        try:
+            return _parse_cli(prompt, StoryPill)
+        except Exception as e:  # noqa: BLE001
+            if not os.environ.get("ANTHROPIC_API_KEY"):
+                raise
+            print(f"[claude] CLI falhou ({e}); a usar API")
+    return _parse_api(prompt, StoryPill)

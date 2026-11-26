@@ -1,0 +1,72 @@
+name: Stories avulsos
+
+on:
+  schedule:
+    # 3 Stories avulsos/dia, entre os posts (UTC → Luanda +1, Cabo Verde -1, Maputo +2)
+    - cron: "47 9 * * *"    # ~10:45 Luanda · 08:45 Praia
+    - cron: "13 15 * * *"   # ~16:15 Luanda · 14:15 Praia
+    - cron: "53 20 * * *"   # ~21:50 Luanda · 19:50 Praia
+  workflow_dispatch:
+    inputs:
+      story_id:
+        description: "Publicar um Story já gerado (ex.: s20261126-1616). Vazio = gerar um novo"
+        default: ""
+      hint:
+        description: "Indicação opcional de tema"
+        default: ""
+
+concurrency:
+  group: ip-state
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  story:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Instalar dependências
+        if: inputs.story_id == ''
+        run: |
+          pip install -r requirements.txt && python -m playwright install --with-deps chromium
+          npm install -g @anthropic-ai/claude-code
+      - name: Pesquisar e criar Story
+        id: create
+        if: inputs.story_id == ''
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          HINT: ${{ inputs.hint }}
+        run: |
+          python -m ip.main pill
+          git config user.name "insta-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add media state.json && git commit -m "novo story avulso" && git push
+      - name: Publicar Story
+        env:
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          SID: ${{ inputs.story_id || steps.create.outputs.story_id }}
+        run: |
+          pip install pydantic requests -q
+          python -m ip.main publish-pill "$SID"
+          git config user.name "insta-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git pull -q --rebase && git add state.json && git commit -m "story publicado $SID" && git push || true
+      - name: Avisar se falhou
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh label create erro --color D73A4A 2>/dev/null || true
+          gh issue create --label erro --title "Falha no Story ($(date -u +%F\ %H:%M))" \
+            --body "Ver registo: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"

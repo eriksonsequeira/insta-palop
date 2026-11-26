@@ -1,0 +1,14 @@
+{
+  "tipo": "noticia",
+  "pilar": "ia",
+  "tema": "Tidal proíbe e remove milhões de músicas 100% geradas por IA",
+  "titulo": "Tidal vai apagar 29 milhões de músicas feitas só por IA",
+  "texto": "A partir de 9 de dezembro, o Tidal remove faixas 100% geradas por IA. Motivo: 43% das músicas enviadas nos últimos 90 dias eram assim. Usar IA como ajuda continua permitido.",
+  "destaque": "29 milhões",
+  "fonte_nome": "TechCrunch",
+  "fontes": [
+    "https://techcrunch.com/2026/11/24/tidal-to-ban-and-remove-millions-of-ai-generated-tracks-as-ai-slop-inundates-music-streaming/",
+    "https://www.technology.org/2026/11/25/tidal-removes-29-million-ai-generated-tracks-december-9/",
+    "https://variety.com/2026/music/news/tidal-bans-ai-generated-music-tracks-1236956924/"
+  ]
+}
