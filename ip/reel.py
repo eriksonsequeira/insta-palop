@@ -218,9 +218,10 @@ def align(audio: Path, tokens: list[str]) -> list[tuple[float, float]]:
     pcm = subprocess.run(["ffmpeg", "-loglevel", "error", "-i", str(audio), "-f", "s16le", "-ac", "1", "-ar", "16000", "-"],
                          capture_output=True, check=True).stdout
     samples = np.frombuffer(pcm, np.int16).astype(np.float32) / 32768.0
-    model = WhisperModel(os.environ.get("WHISPER_MODEL", "small"), device="cpu", compute_type="int8")
+    model = WhisperModel(os.environ.get("WHISPER_MODEL", "medium"), device="cpu", compute_type="int8")
+    # sem initial_prompt: com o guião como pista o Whisper "adivinha" o texto e os tempos ficam desfasados
     segs, _ = model.transcribe(samples, language="pt", word_timestamps=True, vad_filter=False,
-                               initial_prompt=" ".join(tokens)[:800])
+                               condition_on_previous_text=False)
     hw = [(w.word.strip(), w.start, w.end) for s in segs for w in (s.words or [])]
     a = [_norm(t) for t in tokens]
     b = [_norm(w[0]) for w in hw]
