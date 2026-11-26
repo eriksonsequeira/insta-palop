@@ -19,6 +19,7 @@ FORMATOS = {
     "caso-de-negocio": "Caso real de uma empresa/startup (de preferência africana ou lusófona): o que fez, números, lição.",
     "tendencia": "Tendência ou dado recente (relatório, estudo) e o que significa para negócios e carreiras nos PALOP.",
     "passo-a-passo": "Tutorial curto: como fazer algo concreto com IA/tecnologia, passo a passo.",
+    "hype": "Tema EM ALTA esta semana (o que toda a gente está a comentar: jogos como o GTA 6, filmes/séries, futebol, música, memes virais, lançamentos, celebridades, eventos). Primeiro descobre o que está mesmo em tendência (Google Trends, YouTube, X/TikTok, notícias) e depois liga-o de forma inteligente a tecnologia, IA ou negócios: os números do negócio, a tecnologia por trás, a estratégia de marketing, a lição para empreendedores. O gancho é o hype; o valor é a ligação. Evita política partidária, tragédias e polémicas pessoais.",
 }
 
 SYSTEM = f"""És o editor de conteúdo da conta de Instagram {IG_HANDLE}, sobre tecnologia, negócios e inteligência artificial.
@@ -116,9 +117,12 @@ def choose_angle(history: list[dict]) -> tuple[str, str]:
     fc = Counter(p["formato"] for p in last)
     prev_pilar = last[-1]["pilar"] if last else None
     pilar = min((p for p in PILARES if p != prev_pilar), key=lambda p: (pc[p], PILARES.index(p)))
-    # notícias são o formato principal (conteúdo fresco da internet), mas alterna com os restantes
+    # um post "em alta" a cada 4; notícias são o formato principal; o resto alterna
+    if history and all(p.get("formato") != "hype" for p in history[-3:]):
+        return pilar, "hype"
+    fc.pop("hype", None)
     formato = "noticia-explicada" if fc["noticia-explicada"] <= sum(fc.values()) / 3 else \
-        min(FORMATOS, key=lambda f: (fc[f], list(FORMATOS).index(f)))
+        min((f for f in FORMATOS if f != "hype"), key=lambda f: (fc[f], list(FORMATOS).index(f)))
     return pilar, formato
 
 
@@ -128,10 +132,13 @@ def build_prompt(pilar: str, formato: str, history: list[dict], hint: str = "", 
     return (
         f"Cria o próximo post.\n\nPILAR: {nomes[pilar]} (pilar = \"{pilar}\")\n"
         f"FORMATO: {formato} — {FORMATOS[formato]}\n"
-        f"FOCO GEOGRÁFICO: {FOCOS[foco]}\n\n"
-        "Começa por pesquisar na internet as notícias/novidades mais relevantes deste pilar nos últimos dias "
-        "(fontes internacionais e também africanas/lusófonas). Escolhe o tema com mais interesse para o público "
-        "e que NÃO repita nenhum destes temas já publicados:\n"
+        + (f"FOCO GEOGRÁFICO: {FOCOS[foco]}\n\n" if formato != "hype" else
+           "FOCO GEOGRÁFICO: o que estiver em alta a nível global ou nos PALOP (prefere o maior hype).\n\n")
+        + ("Começa por pesquisar o que está em tendência ESTA SEMANA (o assunto do momento) e só depois a ligação "
+           "ao pilar. " if formato == "hype" else
+           "Começa por pesquisar na internet as notícias/novidades mais relevantes deste pilar nos últimos dias "
+           "(fontes internacionais e também africanas/lusófonas). ")
+        + "Escolhe o tema com mais interesse para o público e que NÃO repita nenhum destes temas já publicados:\n"
         f"{temas}\n\n"
         + (f"Indicação extra: {hint}\n\n" if hint else "")
         + "Verifica cada facto com pelo menos uma fonte antes de o usar."
@@ -211,7 +218,8 @@ class Verdict(BaseModel):
 
 VERIFY_RULES = """És um verificador de factos rigoroso. Vais receber um post de Instagram já escrito, em JSON.
 1. Abre as fontes indicadas (e pesquisa mais se precisares) e confirma CADA número, data, nome, citação e afirmação.
-2. Confirma que a notícia é recente (não apresentada como nova se for antiga) e que nada foi exagerado ou distorcido.
+2. Se o post é sobre um tema "em alta", confirma que está mesmo em tendência agora e que a ligação a tecnologia/negócios é factual.
+   Confirma que a notícia é recente (não apresentada como nova se for antiga) e que nada foi exagerado ou distorcido.
 3. Confirma que o texto está em português de Portugal (não do Brasil) e não tem nada ofensivo, político-partidário,
    difamatório, nem conselhos financeiros/médicos perigosos.
 4. O autor (Erikson Sequeira) é cabo-verdiano: reprova se o texto disser que ele é angolano ou empreende em Angola.
@@ -251,9 +259,10 @@ PILL_TIPOS = {
     "dado": ("Dado do dia", "Um número recente e impactante (estudo, relatório, resultados de empresa) — o destaque é esse número."),
     "ferramenta": ("Ferramenta do dia", "Uma ferramenta/app/site útil (de preferência gratuita) de IA ou produtividade: o que faz e para que serve."),
     "dica": ("Dica rápida", "Uma dica prática aplicável em 1 minuto (prompt útil, atalho, truque de negócio, segurança digital)."),
+    "hype": ("Em alta", "O assunto mais comentado do momento (jogo, filme, futebol, música, meme, lançamento) ligado a tecnologia, IA ou negócios — ex.: quanto custou, que tecnologia usa, quanto fatura, o que ensina a quem empreende."),
     "noticia": ("Última hora", "Uma notícia das últimas 48 horas de IA, tecnologia ou negócios, explicada numa frase."),
 }
-PILL_CICLO = ["noticia", "curiosidade", "ferramenta", "dado", "dica", "curiosidade"]
+PILL_CICLO = ["noticia", "hype", "curiosidade", "ferramenta", "hype", "dado", "dica", "curiosidade"]
 
 
 class StoryPill(BaseModel):
