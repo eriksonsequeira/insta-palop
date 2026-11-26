@@ -36,10 +36,20 @@ class Cena(BaseModel):
     fala: str = Field(description="1–2 frases curtas, máx. 26 palavras, PT-PT falado; números em algarismos (ex.: 3,79 mil milhões)")
     palavra_chave: str = Field(description="UMA palavra que aparece literalmente na fala e é a mais importante da cena")
     destaque: str | None = Field(default=None, description="número/palavra curta confirmada (máx. 12 caracteres) ou null")
+    imagem_busca: str = Field(default="", description="2–4 palavras EM INGLÊS para procurar uma FOTO REAL do que a cena "
+                              "mostra no Wikimedia Commons (ex.: 'Take-Two Interactive headquarters', 'video game "
+                              "controller', 'Luanda skyline'); vazio se não houver nada concreto para mostrar")
+
+
+class Pronuncia(BaseModel):
+    escrito: str = Field(description="como aparece na fala (ex.: 'GTA VI', 'IA', 'CEO', 'M$')")
+    dito: str = Field(description="como deve ser lido em voz alta em PT-PT (ex.: 'GTA seis', 'i-á', 'cê-é-ó')")
 
 
 class ReelScript(BaseModel):
     cenas: list[Cena] = Field(description="6 a 9 cenas, total 90–140 palavras (35–45 s)")
+    pronuncias: list[Pronuncia] = Field(default_factory=list, description="siglas, numerais romanos, marcas e "
+                                        "símbolos que um leitor automático leria mal")
     legenda: str = Field(description="legenda do Reel, 300–900 caracteres, termina com pergunta; sem hashtags")
     hashtags: list[str]
 
@@ -52,6 +62,9 @@ Estrutura (método de reels de alta retenção):
 - Última cena: termina numa PERGUNTA para os comentários (sem "segue-me").
 - Frases curtas e fechadas. Linguagem falada de Portugal (tu). Números em algarismos como se escrevem normalmente.
 - Usa SÓ os factos do post (não acrescentes factos novos).
+- pronuncias: lista TODAS as siglas, numerais romanos (VI → seis), símbolos e nomes estrangeiros da fala, com a leitura
+  correta em português de Portugal (ex.: "GTA VI" → "GTA seis", "IA" → "i-á", "CEO" → "cê-é-ó", "Take-Two" → "teik-tu").
+- imagem_busca: pensa no que o espectador deve VER em cada cena (pessoa, lugar, objeto, empresa, produto real).
 - hashtags: exatamente 5, sem '#', minúsculas."""
 
 
@@ -136,6 +149,33 @@ def _edge_tts(text: str, out_wav: Path) -> None:
     _run("ffmpeg", "-y", "-loglevel", "error", "-i", str(mp3), str(out_wav))
     mp3.unlink()
     print("[reel] voz edge-tts (recurso)")
+
+
+def spoken_tokens(tokens: list[str], prons: list) -> tuple[list[str], list[int]]:
+    """Troca siglas/números pela leitura correta. Devolve (tokens ditos, índice do token escrito de cada um)."""
+    rules = sorted(((_norm_seq(p.escrito), p.dito.split()) for p in prons if p.escrito.strip() and p.dito.strip()),
+                   key=lambda r: -len(r[0]))
+    norm = [_norm(t) for t in tokens]
+    out, idx, i = [], [], 0
+    while i < len(tokens):
+        for src, dst in rules:
+            n = len(src)
+            if n and norm[i:i + n] == src:
+                tail = re.search(r"[.,!?;:]+$", tokens[i + n - 1])
+                for k, w in enumerate(dst):
+                    out.append(w + (tail.group(0) if tail and k == len(dst) - 1 else ""))
+                    idx.append(i + min(k * n // max(1, len(dst)), n - 1))
+                i += n
+                break
+        else:
+            out.append(tokens[i])
+            idx.append(i)
+            i += 1
+    return out, idx
+
+
+def _norm_seq(s: str) -> list[str]:
+    return [_norm(t) for t in s.split() if _norm(t)]
 
 
 def narrate(text: str, work: Path) -> Path:
@@ -241,9 +281,11 @@ def build_sentences(script: ReelScript, times: list, total: float) -> list[dict]
         if cena.destaque and ci not in seen:
             dest = cena.destaque
             seen.add(ci)
-        out.append({"start": max(0.0, round(words[0]["start"] - 0.1, 3)), "words": words, "destaque": dest})
+        out.append({"start": max(0.0, round(words[0]["start"] - 0.1, 3)), "words": words, "destaque": dest, "cena": ci})
     out[0]["start"] = 0.0
     out[0]["first"] = True
+    for i in range(1, len(out)):
+        out[i]["start"] = round(max(out[i]["start"], out[i - 1]["start"] + 0.35), 3)
     for i, s in enumerate(out):
         s["end"] = out[i + 1]["start"] if i + 1 < len(out) else total
     return out
@@ -255,11 +297,35 @@ def render(post: dict, script: ReelScript, out_dir: Path) -> Path:
     work = out_dir / "_work"
     work.mkdir(parents=True, exist_ok=True)
     text = "\n\n".join(c.fala for c in script.cenas)
-    audio = narrate(text, work)
-    times = align(audio, text.split())
+    tokens = text.split()
+    said, idx = spoken_tokens(tokens, script.pronuncias)
+    audio = narrate(" ".join(said), work)
+    stimes = align(audio, said)
+    times: list = [None] * len(tokens)
+    for (st, en), j in zip(stimes, idx):
+        times[j] = (st, en) if times[j] is None else (min(times[j][0], st), max(times[j][1], en))
+    for j in range(len(times)):  # (segurança) tokens sem tempo herdam o anterior
+        if times[j] is None:
+            times[j] = times[j - 1] if j else (0.0, 0.2)
     total = round(_dur(audio) + 0.6, 2)
     sentences = build_sentences(script, times, total)
     pub = STUDIO / "public"
+    from . import refimages
+    imgs = refimages.pick(script.cenas, work)
+    (pub / "img").mkdir(exist_ok=True)
+    credits = []
+    used = set()
+    for s_ in sentences:
+        ci = s_.pop("cena")
+        if ci in imgs:
+            name = f"c{ci}.jpg"
+            if ci not in used:
+                shutil.copy(imgs[ci]["path"], pub / "img" / name)
+                used.add(ci)
+                credits.append(f"{imgs[ci]['autor']} ({imgs[ci]['fonte']}, {imgs[ci]['licenca'].upper()})")
+            s_["image"] = f"img/{name}"
+            s_["layout"] = "full" if ci % 2 == 0 else "card"
+    (out_dir / "credits.txt").write_text("\n".join(dict.fromkeys(credits)))
     shutil.copy(audio, pub / "narration.wav")
     music = None
     tracks = sorted(MUSIC_DIR.glob("*.mp3")) if MUSIC_DIR.exists() else []
@@ -276,6 +342,7 @@ def render(post: dict, script: ReelScript, out_dir: Path) -> Path:
     shutil.rmtree(work, ignore_errors=True)
     for f in ("narration.wav", "music.mp3", "props.json"):
         (pub / f).unlink(missing_ok=True)
+    shutil.rmtree(pub / "img", ignore_errors=True)
     durs = sorted(round(s["end"] - s["start"], 1) for s in sentences)
     print(f"[reel] {out} ({_dur(out):.1f}s, {out.stat().st_size / 1e6:.1f} MB, {len(sentences)} cenas, "
           f"mediana {durs[len(durs) // 2]}s)")

@@ -149,18 +149,18 @@ def _system() -> str:
     return SYSTEM.replace("{hoje}", datetime.now(timezone.utc).strftime("%d/%m/%Y"))
 
 
-def _parse_cli(prompt: str, model=None):
+def _parse_cli(prompt: str, model=None, tools: str = "WebSearch,WebFetch", cwd: str | None = None, system: bool = True):
     model = model or Post
     env = {k: v for k, v in os.environ.items() if k != "ANTHROPIC_API_KEY"}  # usar a subscrição
     cmd = [
-        "claude", "-p", f"{_system()}\n\n---\n\n{prompt}",
+        "claude", "-p", f"{_system()}\n\n---\n\n{prompt}" if system else prompt,
         "--model", CLAUDE_MODEL, "--output-format", "json",
-        "--tools", "WebSearch,WebFetch", "--allowedTools", "WebSearch,WebFetch",
+        "--tools", tools, "--allowedTools", tools,
         "--json-schema", json.dumps(model.model_json_schema()),
     ]
     last = None
     for attempt in range(3):
-        r = subprocess.run(cmd, capture_output=True, text=True, env=env, timeout=1200)
+        r = subprocess.run(cmd, capture_output=True, text=True, env=env, timeout=1200, cwd=cwd)
         try:
             data = json.loads(r.stdout)
             if not data.get("is_error") and data.get("structured_output"):

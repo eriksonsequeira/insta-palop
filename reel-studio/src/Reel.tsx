@@ -2,6 +2,7 @@ import React from "react";
 import {
   AbsoluteFill,
   Audio,
+  Img,
   Easing,
   Sequence,
   interpolate,
@@ -17,7 +18,15 @@ const { fontFamily: DISPLAY } = loadDisplay("normal", { weights: ["500", "700"],
 const { fontFamily: BODY } = loadBody("normal", { weights: ["600", "800"], subsets: ["latin", "latin-ext"] });
 
 export type Word = { text: string; start: number; end: number; key?: boolean };
-export type Sentence = { start: number; end: number; words: Word[]; destaque: string | null; first?: boolean };
+export type Sentence = {
+  start: number;
+  end: number;
+  words: Word[];
+  destaque: string | null;
+  first?: boolean;
+  image?: string;
+  layout?: "full" | "card";
+};
 export type ReelProps = {
   fps: number;
   duration: number;
@@ -112,7 +121,7 @@ const SentenceView: React.FC<{ s: Sentence; accent: string; label: string }> = (
   const frame = useCurrentFrame(); // relativo ao início da cena
   const { fps } = useVideoConfig();
   const t = s.start + frame / fps; // tempo absoluto
-  const dur = (s.end - s.start) * fps;
+  const dur = Math.max(2, (s.end - s.start) * fps);
   // câmara: deriva lenta, direção alterna por cena
   const dir = Math.round(s.start * 10) % 2 === 0 ? 1 : -1;
   const scale = interpolate(frame, [0, dur], [1.0, 1.06], { extrapolateRight: "clamp" });
@@ -124,6 +133,30 @@ const SentenceView: React.FC<{ s: Sentence; accent: string; label: string }> = (
   const numberAt = s.destaque ? (s.words.find((w) => /\d/.test(w.text))?.start ?? s.words[0]?.start ?? s.start) : 0;
   return (
     <AbsoluteFill style={{ transform: `translateX(${dx}px) scale(${scale})` }}>
+      {s.image && s.layout === "full" && (
+        <AbsoluteFill>
+          <Img src={staticFile(s.image)} style={{ width: "100%", height: "100%", objectFit: "cover", filter: "brightness(.42) saturate(.9) contrast(1.05)", transform: `scale(${1.04 + 0.04 * (frame / Math.max(1, dur))})` }} />
+          <AbsoluteFill style={{ background: "linear-gradient(180deg, rgba(7,9,15,.55) 0%, rgba(7,9,15,.15) 35%, rgba(7,9,15,.75) 100%)" }} />
+        </AbsoluteFill>
+      )}
+      {s.image && s.layout === "card" && (
+        <div
+          style={{
+            position: "absolute",
+            top: 250,
+            left: 80,
+            right: 80,
+            height: 640,
+            borderRadius: 36,
+            overflow: "hidden",
+            boxShadow: `0 30px 80px rgba(0,0,0,.6), 0 0 0 2px ${accent}55`,
+            transform: `translateY(${interpolate(frame, [0, 8], [40, 0], { extrapolateRight: "clamp" })}px)`,
+            opacity: interpolate(frame, [0, 5], [0, 1], { extrapolateRight: "clamp" }),
+          }}
+        >
+          <Img src={staticFile(s.image)} style={{ width: "100%", height: "100%", objectFit: "cover", transform: `scale(${1.02 + 0.06 * (frame / Math.max(1, dur))})` }} />
+        </div>
+      )}
       <div
         style={{
           position: "absolute",
@@ -157,7 +190,14 @@ const SentenceView: React.FC<{ s: Sentence; accent: string; label: string }> = (
           {keyWord}
         </div>
       )}
-      <AbsoluteFill style={{ padding: "340px 80px 380px 80px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+      <AbsoluteFill
+        style={{
+          padding: s.image && s.layout === "card" ? "960px 80px 330px 80px" : "340px 80px 380px 80px",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: s.image && s.layout === "card" ? "flex-start" : "center",
+        }}
+      >
         {s.first && (
           <div
             style={{

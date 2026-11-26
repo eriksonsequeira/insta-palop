@@ -189,7 +189,10 @@ def publish_reel(post_id: str) -> str:
             break
         time.sleep(10)
     tags = " ".join(f"#{h.lstrip('#').lower()}" for h in script["hashtags"][:5])
-    link = instagram.publish_reel(url, f"{script['legenda'].strip()}\n\n{tags}"[:2200])
+    cred_f = MEDIA / post_id / "credits.txt"
+    cred = cred_f.read_text().strip() if cred_f.exists() else ""
+    cred = f"\n\nImagens: {'; '.join(cred.splitlines())}" if cred else ""
+    link = instagram.publish_reel(url, f"{script['legenda'].strip()}{cred}\n\n{tags}"[:2200])
     st = state.load()
     for p in st["posts"]:
         if p["id"] == post_id:
