@@ -161,10 +161,8 @@ def create_reel(post_id: str | None = None) -> str:
 
     st = state.load()
     if not post_id:
-        cands = [p for p in st["posts"] if p["status"] == "publicado" and not p.get("reel")]
-        if cands:
-            post_id = cands[-1]["id"]
-        else:  # sem carrossel por converter: pesquisa um tema novo só para Reel
+        # cada Reel tem um tema NOVO (nunca repete um carrossel já publicado; o histórico evita repetições)
+        if True:
             post_id = create(os.environ.get("HINT", ""))
             st = state.load()
             for p in st["posts"]:
