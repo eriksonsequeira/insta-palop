@@ -155,6 +155,50 @@ def publish_pill(sid: str) -> None:
     print(f"[ig] story publicado: {sid}")
 
 
+def create_reel(post_id: str | None = None) -> str:
+    """Gera o Reel do último post publicado que ainda não tem Reel."""
+    from . import reel
+
+    st = state.load()
+    if not post_id:
+        cands = [p for p in st["posts"] if p["status"] == "publicado" and not p.get("reel")]
+        if not cands:
+            raise SystemExit("Nenhum post publicado sem Reel.")
+        post_id = cands[-1]["id"]
+    d = json.loads((DRAFTS / f"{post_id}.json").read_text())
+    reel.build(d, MEDIA / post_id)
+    for p in st["posts"]:
+        if p["id"] == post_id:
+            p["reel"] = "gerado"
+    state.save(st)
+    _out("post_id", post_id)
+    return post_id
+
+
+def publish_reel(post_id: str) -> str:
+    import time
+
+    import requests
+
+    from . import instagram
+
+    script = json.loads((MEDIA / post_id / "reel.json").read_text())
+    url = f"{MEDIA_BASE_URL}/{post_id}/reel.mp4"
+    for _ in range(30):
+        if requests.head(url, timeout=20).status_code == 200:
+            break
+        time.sleep(10)
+    tags = " ".join(f"#{h.lstrip('#').lower()}" for h in script["hashtags"][:5])
+    link = instagram.publish_reel(url, f"{script['legenda'].strip()}\n\n{tags}"[:2200])
+    st = state.load()
+    for p in st["posts"]:
+        if p["id"] == post_id:
+            p["reel"] = link
+    state.save(st)
+    print(f"[ig] reel publicado: {link}")
+    return link
+
+
 def discard(post_id: str) -> None:
     st = state.load()
     d = json.loads((DRAFTS / f"{post_id}.json").read_text())
@@ -169,6 +213,10 @@ def main(argv: list[str]) -> None:
         create(hint)
     elif cmd == "publish":
         publish(argv[1])
+    elif cmd == "reel":
+        create_reel(argv[1] if len(argv) > 1 and argv[1] else None)
+    elif cmd == "publish-reel":
+        publish_reel(argv[1])
     elif cmd == "pill":
         create_pill(os.environ.get("HINT", ""))
     elif cmd == "publish-pill":

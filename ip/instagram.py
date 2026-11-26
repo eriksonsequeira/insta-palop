@@ -62,6 +62,16 @@ def publish_story(image_url: str) -> str:
     return _req("POST", f"{uid}/media_publish", creation_id=c)["id"]
 
 
+def publish_reel(video_url: str, caption: str) -> str:
+    """Publica um Reel (também aparece no feed) e devolve o permalink."""
+    uid = me()["user_id"]
+    c = _req("POST", f"{uid}/media", media_type="REELS", video_url=video_url, caption=caption,
+             share_to_feed="true")["id"]
+    _wait(c, timeout=900)
+    media_id = _req("POST", f"{uid}/media_publish", creation_id=c)["id"]
+    return _req("GET", media_id, fields="permalink").get("permalink", "")
+
+
 def recent_captions(limit: int = 30) -> list[str]:
     uid = me()["user_id"]
     data = _req("GET", f"{uid}/media", fields="caption,media_type,timestamp,like_count,comments_count", limit=limit)
