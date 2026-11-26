@@ -216,6 +216,9 @@ def main(argv: list[str]) -> None:
         create(hint)
     elif cmd == "publish":
         publish(argv[1])
+    elif cmd == "stats":
+        from . import stats
+        stats.collect()
     elif cmd == "reel":
         create_reel(argv[1] if len(argv) > 1 and argv[1] else None)
     elif cmd == "publish-reel":
