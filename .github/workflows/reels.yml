@@ -33,17 +33,29 @@ jobs:
         with:
           python-version: "3.12"
           cache: pip
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: reel-studio/package-lock.json
+      - name: Cache do modelo Whisper
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: whisper-small-v1
       - name: Instalar dependências
         run: |
-          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg fonts-noto-color-emoji
           pip install -r requirements.txt && python -m playwright install --with-deps chromium
           npm install -g @anthropic-ai/claude-code
+          cd reel-studio && npm ci && npx remotion browser ensure
       - name: Criar Reel
         id: create
         if: inputs.only_publish != '1'
         env:
           CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           POST_ID: ${{ inputs.post_id }}
         run: |
           python -m ip.main reel "$POST_ID"

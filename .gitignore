@@ -2,3 +2,5 @@
 __pycache__/
 .env
 *.html.tmp
+reel-studio/node_modules/
+reel-studio/out/
