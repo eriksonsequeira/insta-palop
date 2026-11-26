@@ -12,6 +12,9 @@ on:
       only_publish:
         description: "1 = só publicar um reel.mp4 já gerado"
         default: "0"
+      dry_run:
+        description: "1 = gerar sem publicar (fica como artefacto para ver)"
+        default: "0"
 
 concurrency:
   group: ip-state
@@ -59,10 +62,18 @@ jobs:
           POST_ID: ${{ inputs.post_id }}
         run: |
           python -m ip.main reel "$POST_ID"
+          if [ "${{ inputs.dry_run }}" = "1" ]; then exit 0; fi
           git config user.name "insta-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add media state.json && git commit -m "novo reel" && git push
+      - name: Guardar vídeo de teste
+        if: inputs.dry_run == '1'
+        uses: actions/upload-artifact@v4
+        with:
+          name: reel-teste
+          path: media/*/reel.mp4
       - name: Publicar Reel
+        if: inputs.dry_run != '1'
         env:
           IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
           PID: ${{ steps.create.outputs.post_id || inputs.post_id }}
