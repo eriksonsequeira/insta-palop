@@ -13,6 +13,7 @@ import {
 } from "remotion";
 import { loadFont as loadDisplay } from "@remotion/google-fonts/SpaceGrotesk";
 import { loadFont as loadBody } from "@remotion/google-fonts/Inter";
+import { measureText } from "@remotion/layout-utils";
 
 const { fontFamily: DISPLAY } = loadDisplay("normal", { weights: ["500", "700"], subsets: ["latin", "latin-ext"] });
 const { fontFamily: BODY } = loadBody("normal", { weights: ["600", "800"], subsets: ["latin", "latin-ext"] });
@@ -37,6 +38,45 @@ export type ReelProps = {
   handle: string;
   sentences: Sentence[];
 };
+
+/* zonas seguras do Instagram no telemóvel (1080x1920):
+   direita = coluna de botões; baixo = nome + legenda; cima = cabeçalho dos Reels. A câmara mexe ~6%: margem extra. */
+const SAFE = { left: 80, right: 200, top: 260, bottom: 480 };
+const TEXT_W = 1080 - SAFE.left - SAFE.right - 50; // 750 px úteis
+
+function wordW(text: string, size: number): number {
+  return measureText({ text, fontFamily: DISPLAY, fontWeight: "700", fontSize: size, letterSpacing: `${-0.03 * size}px` }).width;
+}
+
+/** maior tamanho (≤ max) em que cada palavra cabe na largura e o bloco cabe na altura */
+function fitWords(words: { text: string; key?: boolean }[], max: number, height: number): number {
+  for (let size = max; size >= 52; size -= 4) {
+    let lines = 1;
+    let x = 0;
+    let fits = true;
+    for (const w of words) {
+      const ww = wordW(w.text, w.key ? size * 1.28 : size);
+      if (ww > TEXT_W) {
+        fits = false;
+        break;
+      }
+      const gap = size * 0.24;
+      if (x > 0 && x + gap + ww > TEXT_W) {
+        lines += 1;
+        x = ww;
+      } else {
+        x += (x > 0 ? gap : 0) + ww;
+      }
+    }
+    if (fits && lines * size * 1.2 <= height) return size;
+  }
+  return 52;
+}
+
+function fitOneLine(text: string, max: number): number {
+  for (let size = max; size >= 60; size -= 6) if (wordW(text, size) <= TEXT_W) return size;
+  return 60;
+}
 
 const INK = "#F4F1EA";
 const MUTED = "#8F96AA";
@@ -94,7 +134,7 @@ const CountUp: React.FC<{ text: string; accent: string; frame: number; fps: numb
     if (num.includes(",")) s = s.replace(".", ",");
     shown = `${pre}${s}${post}`;
   }
-  const size = text.length > 9 ? 140 : text.length > 6 ? 180 : 240;
+  const size = fitOneLine(text, text.length > 6 ? 190 : 240);
   return (
     <div
       style={{
@@ -127,7 +167,10 @@ const SentenceView: React.FC<{ s: Sentence; accent: string; label: string }> = (
   const scale = interpolate(frame, [0, dur], [1.0, 1.06], { extrapolateRight: "clamp" });
   const dx = interpolate(frame, [0, dur], [0, 18 * dir], { extrapolateRight: "clamp" });
   const n = s.words.length;
-  const size = n <= 3 ? 150 : n <= 6 ? 120 : n <= 9 ? 98 : 82;
+  const card = !!s.image && s.layout === "card";
+  const reserved = (s.first ? 110 : 0) + (s.destaque ? 230 : 0);
+  const height = (card ? 1920 - 950 - SAFE.bottom : 1920 - SAFE.top - SAFE.bottom) - reserved;
+  const size = React.useMemo(() => fitWords(s.words, n <= 3 ? 150 : n <= 6 ? 124 : 104, height), [s.words, n, height]);
   const keyWord = s.words.find((w) => w.key)?.text.replace(/[.,!?;:]/g, "");
   const ghostX = interpolate(frame, [0, dur], [40, -60], { extrapolateRight: "clamp" });
   const numberAt = s.destaque ? (s.words.find((w) => /\d/.test(w.text))?.start ?? s.words[0]?.start ?? s.start) : 0;
@@ -143,9 +186,9 @@ const SentenceView: React.FC<{ s: Sentence; accent: string; label: string }> = (
         <div
           style={{
             position: "absolute",
-            top: 250,
-            left: 80,
-            right: 80,
+            top: SAFE.top,
+            left: SAFE.left,
+            right: SAFE.left,
             height: 640,
             borderRadius: 36,
             overflow: "hidden",
@@ -171,19 +214,19 @@ const SentenceView: React.FC<{ s: Sentence; accent: string; label: string }> = (
           borderTopColor: accent,
         }}
       />
-      {keyWord && (
+      {keyWord && !card && (
         <div
           style={{
             position: "absolute",
-            top: 1270,
+            top: 1150,
             left: ghostX,
             whiteSpace: "nowrap",
             fontFamily: DISPLAY,
             fontWeight: 700,
-            fontSize: 330,
+            fontSize: 250,
             letterSpacing: "-0.05em",
             color: accent,
-            opacity: 0.07,
+            opacity: 0.06,
             textTransform: "uppercase",
           }}
         >
@@ -192,10 +235,12 @@ const SentenceView: React.FC<{ s: Sentence; accent: string; label: string }> = (
       )}
       <AbsoluteFill
         style={{
-          padding: s.image && s.layout === "card" ? "960px 80px 330px 80px" : "340px 80px 380px 80px",
+          padding: card
+            ? `950px ${SAFE.right}px ${SAFE.bottom}px ${SAFE.left}px`
+            : `${SAFE.top}px ${SAFE.right}px ${SAFE.bottom}px ${SAFE.left}px`,
           display: "flex",
           flexDirection: "column",
-          justifyContent: s.image && s.layout === "card" ? "flex-start" : "center",
+          justifyContent: card ? "flex-start" : "center",
         }}
       >
         {s.first && (
@@ -299,7 +344,6 @@ export const Reel: React.FC<ReelProps> = (p) => {
       })}
       {/* barra de progresso + assinatura (fora da zona dos botões, à direita/baixo) */}
       <div style={{ position: "absolute", top: 0, left: 0, height: 10, width: `${(f / durationInFrames) * 100}%`, background: p.accent }} />
-      <div style={{ position: "absolute", top: 120, left: 80, fontFamily: BODY, fontWeight: 600, fontSize: 30, color: MUTED }}>{p.handle}</div>
       {p.audio && <Audio src={staticFile(p.audio)} />}
       {p.music && (
         <Audio
