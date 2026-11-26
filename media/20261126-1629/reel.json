@@ -1,47 +1,112 @@
 {
   "cenas": [
     {
-      "fala": "Três vírgula setenta e nove mil milhões de dólares num só dia. E sem IA generativa.",
-      "titulo": "3,79 mil milhões $ num só dia",
-      "destaque": "3,79 mil M$"
+      "fala": "GTA VI: 3,79 mil milhões de dólares num só dia. E sem IA generativa.",
+      "palavra_chave": "generativa",
+      "destaque": "3,79 mil M$",
+      "imagem_busca": "Grand Theft Auto VI"
     },
     {
-      "fala": "O GTA seis saiu a dezanove de novembro. O número é uma estimativa da Take-Two. A Rockstar chama-lhe o maior lançamento de entretenimento de sempre.",
-      "titulo": "O maior lançamento de sempre?",
-      "destaque": "19 nov"
+      "fala": "Os números são da Take-Two. A Rockstar chama-lhe o maior lançamento de entretenimento de sempre.",
+      "palavra_chave": "maior",
+      "destaque": null,
+      "imagem_busca": "Rockstar Games logo"
     },
     {
-      "fala": "Antes de sair, já tinha vendido trinta e dois vírgula cinco milhões de unidades. Lição: valida a procura e recebe antes de escalar.",
-      "titulo": "Vendido antes de chegar às lojas",
-      "destaque": "32,5 milhões"
+      "fala": "Antes de sair, já tinha vendido 32,5 milhões de unidades. A procura estava provada antes do dia 1.",
+      "palavra_chave": "procura",
+      "destaque": "32,5 milhões",
+      "imagem_busca": "video game store"
     },
     {
-      "fala": "Em dois mil e treze, o GTA cinco fez cerca de oitocentos milhões no primeiro dia. Agora foi quase cinco vezes mais.",
-      "titulo": "Quase 5 vezes o GTA V",
-      "destaque": "~5x"
+      "fala": "Em 2013, o GTA V fez cerca de 800 milhões no 1.º dia. Este fez quase 5 vezes mais.",
+      "palavra_chave": "vezes",
+      "destaque": "5 vezes",
+      "imagem_busca": "Grand Theft Auto V"
     },
     {
-      "fala": "Segundo o CEO da Take-Two, a IA generativa não teve qualquer papel na criação do jogo. Os mundos são feitos à mão.",
-      "titulo": "Feito à mão, sem IA generativa",
-      "destaque": null
+      "fala": "Só que o CEO da Take-Two diz que a IA generativa não teve qualquer papel. Os mundos são feitos à mão.",
+      "palavra_chave": "mão",
+      "destaque": null,
+      "imagem_busca": "Strauss Zelnick"
     },
     {
-      "fala": "Mas a empresa dá ChatGPT e Claude aos funcionários e tem cerca de duzentos projetos internos de IA. Na operação, não na criação.",
-      "titulo": "A IA está na operação",
-      "destaque": "~200"
+      "fala": "Mas a empresa usa IA todos os dias: ChatGPT, Claude e cerca de 200 projetos internos.",
+      "palavra_chave": "projetos",
+      "destaque": "200 projetos",
+      "imagem_busca": "Take-Two Interactive headquarters"
     },
     {
-      "fala": "IA na operação, criatividade humana no produto. Concordas? Segue para mais.",
-      "titulo": "IA na operação, humanos no produto",
-      "destaque": null
+      "fala": "Testes, produtividade, otimização. A IA está na operação, não na criação.",
+      "palavra_chave": "operação",
+      "destaque": null,
+      "imagem_busca": "office workers computers"
+    },
+    {
+      "fala": "E a expectativa? O 1.º trailer teve 90,4 milhões de visualizações em 24 horas. Recorde do Guinness.",
+      "palavra_chave": "Guinness",
+      "destaque": "90,4 milhões",
+      "imagem_busca": "YouTube logo"
+    },
+    {
+      "fala": "IA na operação, criatividade humana no produto. Concordas com esta estratégia?",
+      "palavra_chave": "criatividade",
+      "destaque": null,
+      "imagem_busca": "video game controller"
     }
   ],
-  "legenda": "3,79 mil milhões de dólares num dia. E a IA generativa ficou de fora da criação.\n\nO GTA VI saiu a 19 de novembro e, segundo a Take-Two, faturou cerca de 3,79 mil milhões de dólares em vendas no 1.º dia. Antes de sair, já tinha vendido 32,5 milhões de unidades.\n\nO mais interessante para quem tem um negócio: a Take-Two usa IA todos os dias, com ChatGPT e Claude para os funcionários e cerca de 200 projetos internos. Usa-a para produtividade, testes e otimização. A parte criativa, o que diferencia o produto, continua a ser feita à mão.\n\nAplica isto ao teu negócio: automatiza o que é repetitivo e investe a tua energia no que te torna único.\n\nNo teu negócio, onde é que a IA já te poupa tempo? Guarda este post.\n\nFonte: Fox Business, ABC News, Deadline, The Next Web",
+  "pronuncias": [
+    {
+      "escrito": "GTA VI",
+      "dito": "gê-tê-á seis"
+    },
+    {
+      "escrito": "GTA V",
+      "dito": "gê-tê-á cinco"
+    },
+    {
+      "escrito": "IA",
+      "dito": "i-á"
+    },
+    {
+      "escrito": "CEO",
+      "dito": "cê-é-ó"
+    },
+    {
+      "escrito": "Take-Two",
+      "dito": "teik-tu"
+    },
+    {
+      "escrito": "Rockstar",
+      "dito": "róc-star"
+    },
+    {
+      "escrito": "ChatGPT",
+      "dito": "tchat-gê-pê-tê"
+    },
+    {
+      "escrito": "Claude",
+      "dito": "clód"
+    },
+    {
+      "escrito": "Guinness",
+      "dito": "guínes"
+    },
+    {
+      "escrito": "1.º",
+      "dito": "primeiro"
+    },
+    {
+      "escrito": "trailer",
+      "dito": "trêiler"
+    }
+  ],
+  "legenda": "GTA VI: 3,79 mil milhões de dólares no 1.º dia. E sem IA generativa na criação do jogo.\n\nOs números são uma estimativa da Take-Two. A Rockstar chama-lhe o maior lançamento de entretenimento de sempre. Antes de sair, já tinham sido vendidas 32,5 milhões de unidades.\n\nO mais interessante é a estratégia. Segundo o CEO da Take-Two, os mundos do jogo são feitos à mão. Só que a empresa usa IA todos os dias: dá aos funcionários ChatGPT e Claude e tem cerca de 200 projetos internos para produtividade, testes e otimização.\n\nLição para quem empreende: põe a IA a trabalhar na operação e guarda o toque humano para aquilo que te diferencia.\n\nNa tua área, onde usarias a IA e onde não abdicarias do trabalho humano?",
   "hashtags": [
-    "gta6",
     "inteligenciaartificial",
+    "gta6",
     "negocios",
     "empreendedorismo",
-    "palop"
+    "tecnologiapalop"
   ]
 }
