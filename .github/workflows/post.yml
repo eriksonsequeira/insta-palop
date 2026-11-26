@@ -53,16 +53,24 @@ jobs:
           git push
 
       - name: Publicar já (modo automático)
-        if: vars.AUTO_PUBLISH == '1'
+        if: vars.AUTO_PUBLISH != '0'
         env:
           IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
         run: |
-          sleep 20   # dar tempo ao CDN do GitHub para servir as imagens
           python -m ip.main publish "${{ steps.create.outputs.post_id }}"
           git add state.json && git commit -m "publicado ${{ steps.create.outputs.post_id }}" && git push
 
+      - name: Avisar se falhou
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh label create erro --color D73A4A 2>/dev/null || true
+          gh issue create --label erro --title "Falha ao criar/publicar post ($(date -u +%F\ %H:%M))" \
+            --body "Ver registo: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+
       - name: Pedir aprovação (Issue)
-        if: vars.AUTO_PUBLISH != '1'
+        if: vars.AUTO_PUBLISH == '0'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |

@@ -25,8 +25,8 @@ IG_ACCESS_TOKEN = env("IG_ACCESS_TOKEN")
 IG_GRAPH_HOST = env("IG_GRAPH_HOST", "https://graph.instagram.com")  # ou https://graph.facebook.com
 IG_API_VERSION = env("IG_API_VERSION", "v23.0")
 
-# 1 = publica logo; 0 = abre uma Issue no GitHub para aprovares (comenta "ok" para publicar)
-AUTO_PUBLISH = env("AUTO_PUBLISH", "0") == "1"
+# 1 (omissão) = publica logo; 0 = abre uma Issue no GitHub para aprovares (comenta "ok" para publicar)
+AUTO_PUBLISH = env("AUTO_PUBLISH", "1") == "1"
 
 # URL pública base onde ficam as imagens (por omissão: raw do próprio repositório público)
 GITHUB_REPOSITORY = env("GITHUB_REPOSITORY", "")

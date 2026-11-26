@@ -31,7 +31,18 @@ def create(hint: str = "") -> str:
     st = state.load()
     pilar, formato = brain.choose_angle(st["posts"])
     print(f"[post] pilar={pilar} formato={formato}")
-    post = brain.write_post(pilar, formato, st["posts"], hint)
+    post = None
+    for attempt in range(2):
+        cand = brain.write_post(pilar, formato, st["posts"], hint)
+        v = brain.verify(cand)
+        if v.aprovado:
+            print("[verificação] aprovado")
+            post = cand
+            break
+        print(f"[verificação] reprovado: {v.problemas}")
+        hint = (hint + "\n" if hint else "") + "Um verificador reprovou a versão anterior por: " + "; ".join(v.problemas)
+    if post is None:
+        raise SystemExit("Post reprovado duas vezes na verificação — nada publicado nesta ronda.")
     post_id = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M")
     DRAFTS.mkdir(exist_ok=True)
     (DRAFTS / f"{post_id}.json").write_text(json.dumps(post.model_dump(), ensure_ascii=False, indent=2))
@@ -59,8 +70,16 @@ def review_md(d: dict) -> str:
 def publish(post_id: str) -> str:
     from . import instagram
 
+    import time
+    import requests
+
     d = json.loads((DRAFTS / f"{post_id}.json").read_text())
     urls = [f"{MEDIA_BASE_URL}/{post_id}/{f}" for f in d["images"]]
+    for u in urls:  # esperar que o CDN sirva as imagens (o Instagram vai buscá-las por URL)
+        for _ in range(30):
+            if requests.head(u, timeout=20).status_code == 200:
+                break
+            time.sleep(10)
     link = instagram.publish_carousel(urls, caption(d), d.get("alt_text", ""))
     st = state.load()
     state.record(st, post_id, d, "publicado", link)

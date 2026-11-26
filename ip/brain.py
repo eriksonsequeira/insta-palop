@@ -41,6 +41,10 @@ FACTOS — REGRA DE OURO:
 - Pesquisa na internet ANTES de escrever. Usa só informação que encontraste em fontes fiáveis e recentes.
 - Nunca inventes números, datas, citações, nomes de produtos ou empresas. Se não confirmaste, não escrevas.
 - Lista em `fontes` os URLs exatos onde confirmaste cada facto.
+- Citações e ideias atribuídas a alguém: só o que a fonte diz de facto (parafraseia com fidelidade, sem acrescentar).
+- Papéis exatos: "fez a palestra de abertura" não é o mesmo que "abriu o evento"; "segundo X" quando é estimativa.
+- Se duas fontes dão números diferentes, não uses esse número (ou usa um termo vago como "centenas").
+- Evita conteúdo patrocinado/publirreportagem ("Brand Voice", "Sponsored") como fonte principal.
 - Hoje é {{hoje}}. Notícias devem ser dos últimos 7 dias; não apresentes como novidade algo antigo.
 
 FORMATO DOS SLIDES (carrossel 4:5):
@@ -164,3 +168,44 @@ def _clean(p: Post) -> Post:
     p.hashtags = [h.lstrip("#").strip().lower().replace(" ", "") for h in p.hashtags][:5]
     p.slides = p.slides[:6]
     return p
+
+
+# ---------------- Verificação automática (substitui a aprovação humana) ----------------
+
+class Verdict(BaseModel):
+    aprovado: bool = Field(description="true só se todos os factos estão confirmados nas fontes e o texto está em PT-PT correto")
+    problemas: list[str] = Field(description="lista de erros concretos encontrados (vazia se aprovado)")
+
+
+VERIFY_RULES = """És um verificador de factos rigoroso. Vais receber um post de Instagram já escrito, em JSON.
+1. Abre as fontes indicadas (e pesquisa mais se precisares) e confirma CADA número, data, nome, citação e afirmação.
+2. Confirma que a notícia é recente (não apresentada como nova se for antiga) e que nada foi exagerado ou distorcido.
+3. Confirma que o texto está em português de Portugal (não do Brasil) e não tem nada ofensivo, político-partidário,
+   difamatório, nem conselhos financeiros/médicos perigosos.
+Pequenas questões de estilo NÃO reprovam. Reprova só por erros factuais, linguagem errada ou risco reputacional."""
+
+
+def verify(post: Post) -> Verdict:
+    prompt = f"{VERIFY_RULES}\n\nHoje é {datetime.now(timezone.utc):%d/%m/%Y}.\n\nPOST:\n{post.model_dump_json(indent=2)}"
+    if os.environ.get("CLAUDE_CODE_OAUTH_TOKEN") or os.environ.get("USE_CLAUDE_CLI") == "1":
+        env = {k: v for k, v in os.environ.items() if k != "ANTHROPIC_API_KEY"}
+        cmd = ["claude", "-p", prompt, "--model", CLAUDE_MODEL, "--output-format", "json",
+               "--tools", "WebSearch,WebFetch", "--allowedTools", "WebSearch,WebFetch",
+               "--json-schema", json.dumps(Verdict.model_json_schema())]
+        for _ in range(2):
+            r = subprocess.run(cmd, capture_output=True, text=True, env=env, timeout=900)
+            try:
+                data = json.loads(r.stdout)
+                if data.get("structured_output"):
+                    return Verdict.model_validate(data["structured_output"])
+            except json.JSONDecodeError:
+                pass
+    import anthropic
+    resp = anthropic.Anthropic().messages.create(
+        model=CLAUDE_MODEL, max_tokens=8000,
+        tools=[{"type": "web_search_20250305", "name": "web_search", "max_uses": 6}],
+        messages=[{"role": "user", "content": prompt + "\n\nResponde no fim APENAS com JSON: "
+                   + json.dumps(Verdict.model_json_schema())}],
+    )
+    text = "".join(b.text for b in resp.content if getattr(b, "type", "") == "text")
+    return Verdict.model_validate_json(re.search(r"\{.*\}", text, re.S).group(0))
