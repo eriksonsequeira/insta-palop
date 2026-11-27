@@ -1,0 +1,67 @@
+{
+  "pilar": "negocios",
+  "formato": "caso-de-negocio",
+  "tema": "Moçambique passa os 512 mil agentes de dinheiro móvel e o caso M-Pesa (receitas a crescer enquanto a Vodacom fatura menos)",
+  "capa_titulo": "Moçambique: 512 mil agentes contra 1 389 multibancos",
+  "capa_subtitulo": "Como o dinheiro móvel passou à frente dos bancos e o que o M-Pesa ensina a quem empreende",
+  "slides": [
+    {
+      "titulo": "Meio milhão de agentes, pela primeira vez",
+      "texto": "Em agosto de 2026, Moçambique tinha 512 149 agentes de moeda eletrónica, segundo o Banco de Moçambique. São lojas e pessoas onde depositas, levantas e transferes pelo telemóvel. Operadores: M-Pesa, e-Mola e M-Kesh.",
+      "destaque": "512 149"
+    },
+    {
+      "titulo": "Mais de 360 agentes por cada ATM",
+      "texto": "No mesmo mês, o país tinha 1 389 caixas automáticas e 36 271 terminais de pagamento (POS). O dinheiro chega às pessoas através da rede de agentes, e não das agências bancárias.",
+      "destaque": "1 389 ATM"
+    },
+    {
+      "titulo": "Há mais contas móveis do que adultos",
+      "texto": "No fim de 2025, havia 1 313 contas de moeda eletrónica por cada 1000 adultos (mais 20% num ano). Contas bancárias: 337 por cada 1000 adultos (mais 2%). São quase 4 vezes mais contas no telemóvel.",
+      "destaque": "1 313 por 1000"
+    },
+    {
+      "titulo": "O caso M-Pesa: cresce quando o resto trava",
+      "texto": "No ano fiscal até março de 2026, a faturação da Vodacom Moçambique caiu 1,5%, para 20 359 milhões de meticais. As receitas do M-Pesa subiram 5,2%, para 4,3 mil milhões, com 6,4 milhões de clientes.",
+      "destaque": "+5,2%"
+    },
+    {
+      "titulo": "Uma rede 5 vezes maior desde 2021",
+      "texto": "Em 2021 havia 90 558 agentes. No fim de 2025 eram 446 604 e em agosto de 2026 já eram 512 149. Em 2025, as transferências passaram a ser 48% das operações móveis (41% em 2024).",
+      "destaque": "90 mil → 512 mil"
+    },
+    {
+      "titulo": "A lição para quem empreende",
+      "texto": "Mais do que balcões caros, o que fez crescer o dinheiro móvel foram os agentes e os telemóveis. Mesmo assim, o índice de inclusão financeira ficou nos 36,4 pontos, um nível 'moderado'. Ainda há muito por construir.",
+      "destaque": "36,4 pontos"
+    }
+  ],
+  "cta_titulo": "Na tua terra, já usas mais a carteira móvel do que o banco?",
+  "legenda": "Moçambique tem mais de 360 agentes de dinheiro móvel por cada caixa automática.\n\nOs dados são do Banco de Moçambique: em agosto de 2026, a rede de agentes de moeda eletrónica passou pela primeira vez o meio milhão (512 149). Para comparar, o país tinha 1 389 ATM.\n\nO mais interessante é o modelo de negócio. Um agente pode ser a mercearia do bairro, a banca do mercado ou o quiosque da esquina. Não é preciso construir uma agência. O operador junta-se a negócios que já existem e as pessoas usam o telemóvel que já têm.\n\nOs números da Vodacom Moçambique mostram o efeito. No ano fiscal até março de 2026, a faturação total caiu 1,5%, mas as receitas do M-Pesa subiram 5,2%, para 4,3 mil milhões de meticais. Foi o serviço financeiro que continuou a crescer quando o negócio principal abrandou.\n\nHá também um alerta: o índice de inclusão financeira do país não mexeu e ficou nos 36,4 pontos. Ter uma conta não é o mesmo que ter acesso a crédito, poupança ou seguros. É aí que está a próxima oportunidade para startups e fintechs.\n\nNos PALOP, a tendência é parecida, com o vinti4 em Cabo Verde, o Unitel Money em Angola e o Orange Money em vários mercados. Quem constrói em cima destas redes chega a mais clientes, e mais depressa.\n\nE tu, pagas mais com o telemóvel ou em dinheiro vivo? Conta nos comentários.\n\nPartilha com quem precisa de perceber para onde está a ir o dinheiro em África.\n\nFonte: Banco de Moçambique (via Lusa/Diário Económico), Executive Digest, Telecompaper",
+  "hashtags": [
+    "mocambique",
+    "mpesa",
+    "dinheiromovel",
+    "fintech",
+    "empreendedorismo"
+  ],
+  "alt_text": "Carrossel sobre Moçambique: 512 149 agentes de dinheiro móvel contra 1 389 ATM, quase 4 contas móveis por cada conta bancária e o caso M-Pesa, cujas receitas subiram 5,2%.",
+  "story_gancho": "Moçambique já tem mais de 512 mil agentes de dinheiro móvel e só 1 389 multibancos.",
+  "fontes": [
+    "https://www.diarioeconomico.co.mz/2026/11/25/economia/mocambique-ultrapassa-meio-milhao-de-agentes-de-moeda-electronica-pela-primeira-vez/",
+    "https://executivedigest.sapo.pt/mocambique-ultrapassa-marca-de-meio-milhao-de-agentes-de-carteira-movel-nas-ruas/",
+    "https://executivedigest.sapo.pt/vodacom-com-quebra-na-faturacao-em-mocambique-apesar-de-melhoria-operacional/",
+    "https://www.telecompaper.com/news/vodacom-mozambique-posts-15-fall-in-annual-revenues--1579987"
+  ],
+  "id": "20261127-1243",
+  "images": [
+    "01.jpg",
+    "02.jpg",
+    "03.jpg",
+    "04.jpg",
+    "05.jpg",
+    "06.jpg",
+    "07.jpg",
+    "08.jpg"
+  ]
+}
