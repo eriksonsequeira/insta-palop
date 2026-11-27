@@ -1,0 +1,66 @@
+{
+  "pilar": "tecnologia",
+  "formato": "hype",
+  "tema": "Black Friday/Cyber Week 2026: a IA influencia 21% das vendas online (Salesforce) e lições para quem vende",
+  "capa_titulo": "Black Friday 2026: a IA entrou no carrinho",
+  "capa_subtitulo": "A Salesforce estima 75,8 mil milhões de dólares em vendas influenciadas por IA",
+  "slides": [
+    {
+      "titulo": "Hoje é Black Friday",
+      "texto": "A Cyber Week vai de 24 a 30 de novembro. A Salesforce prevê 357 mil milhões de dólares em vendas online a nível global. É um recorde, mais 6% do que em 2025.",
+      "destaque": "357 mil milhões $"
+    },
+    {
+      "titulo": "A IA já pesa 1 em cada 5 vendas",
+      "texto": "Segundo a Salesforce, as recomendações e os agentes de IA vão influenciar 75,8 mil milhões de dólares, ou seja, 21% das vendas online globais da Cyber Week. Em 2025 foram 67 mil milhões.",
+      "destaque": "21%"
+    },
+    {
+      "titulo": "Quem chega pela IA compra mais",
+      "texto": "O tráfego que chega às lojas online vindo de IA subiu 104% num ano. E quem chega por recomendação de uma IA tem o dobro da probabilidade de comprar, segundo a Salesforce.",
+      "destaque": "+104%"
+    },
+    {
+      "titulo": "Mas o cartão ainda fica no bolso",
+      "texto": "31% dos consumidores já experimentaram um agente pessoal de IA, mas só 8% deixaram um agente comprar por eles. E 73% ainda não estão prontos para lhe dar os dados do cartão.",
+      "destaque": "8%"
+    },
+    {
+      "titulo": "Lojas com agente próprio vendem mais",
+      "texto": "Quem usa o agente de compras da própria marca gasta mais 8% por encomenda e leva mais 23% de artigos. Segundo a Salesforce, as marcas com agente crescem 7 vezes mais depressa.",
+      "destaque": "+23% de artigos"
+    },
+    {
+      "titulo": "O que isto quer dizer para ti",
+      "texto": "O principal uso dos agentes pessoais é comparar preços. Se vendes online, põe preços, fotos e descrições claras no site ou no catálogo. É com essa informação que a IA encontra e compara produtos.",
+      "destaque": null
+    }
+  ],
+  "cta_titulo": "Já pediste a uma IA para te ajudar a escolher uma compra?",
+  "legenda": "Esta Black Friday, muita gente vai comprar o que uma IA lhe recomendou.\n\nHoje é Black Friday, um dos dias mais fortes da Cyber Week. Nos EUA, a Adobe prevê 12,9 mil milhões de dólares em vendas online só hoje (mais 9,2% do que em 2025) e 15,1 mil milhões na Cyber Monday, que seria um recorde para um só dia. O Dia de Ação de Graças já tinha chegado aos 7,1 mil milhões.\n\nO dado mais interessante não é o volume. É a forma como se compra. Segundo a Adobe, o tráfego que chega às lojas americanas vindo de ferramentas de IA subiu 159% no Dia de Ação de Graças. A Salesforce estima que 1 em cada 5 consumidores começa as compras de Natal com uma IA.\n\nMas atenção: a IA influencia a compra e a decisão final continua a ser da pessoa. Só 8% já deixaram um agente pagar por eles.\n\nA lição para quem vende, seja em Praia, Luanda ou Maputo: a montra já não é só o Instagram ou o WhatsApp. É também a resposta que uma IA dá quando alguém pergunta \"qual é a melhor opção?\". Preços visíveis, descrições completas e informação atualizada passam a contar como marketing.\n\nComo empreendedor cabo-verdiano, vejo aqui uma oportunidade: os pequenos negócios que organizarem bem a informação agora chegam primeiro a este novo canal.\n\nE tu, confiavas numa IA para escolher um presente por ti? Diz-me nos comentários.\n\nGuarda este post e partilha com quem vende online.\n\nFonte: Salesforce, Adobe (via Yahoo Finance)",
+  "hashtags": [
+    "blackfriday",
+    "inteligenciaartificial",
+    "ecommerce",
+    "empreendedorismo",
+    "palop"
+  ],
+  "alt_text": "Carrossel sobre a Black Friday 2026: dados da Salesforce mostram que a IA influencia 21% das vendas online da Cyber Week (75,8 mil milhões de dólares). Mostra também como os agentes de IA mudam as compras e o que fazer se vendes online.",
+  "story_gancho": "A IA vai influenciar 21% das vendas online desta Black Friday, segundo a Salesforce. Vê o que isso muda.",
+  "fontes": [
+    "https://www.salesforce.com/news/stories/cyber-week-ai-sales-2026/",
+    "https://finance.yahoo.com/technology/ai/articles/adbe-stock-track-4-day-173901382.html",
+    "https://techresearchonline.com/news/black-friday-online-sales/"
+  ],
+  "id": "20261127-1923",
+  "images": [
+    "01.jpg",
+    "02.jpg",
+    "03.jpg",
+    "04.jpg",
+    "05.jpg",
+    "06.jpg",
+    "07.jpg",
+    "08.jpg"
+  ]
+}

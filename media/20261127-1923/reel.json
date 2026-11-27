@@ -1,0 +1,90 @@
+{
+  "cenas": [
+    {
+      "fala": "Black Friday: 1 em cada 5 compras online desta Cyber Week vai ser influenciada por IA.",
+      "palavra_chave": "IA",
+      "destaque": "21%",
+      "imagem_busca": "Black Friday shopping"
+    },
+    {
+      "fala": "Segundo a Salesforce, são 75,8 mil milhões de dólares. Em 2025 foram 67 mil milhões.",
+      "palavra_chave": "Salesforce",
+      "destaque": "75,8 mil M$",
+      "imagem_busca": "Salesforce Tower"
+    },
+    {
+      "fala": "No total, a Salesforce prevê 357 mil milhões em vendas online. Um recorde.",
+      "palavra_chave": "recorde",
+      "destaque": "357 mil M$",
+      "imagem_busca": "online shopping laptop"
+    },
+    {
+      "fala": "E o melhor: quem chega a uma loja por recomendação de IA tem o dobro da probabilidade de comprar.",
+      "palavra_chave": "dobro",
+      "destaque": "2x",
+      "imagem_busca": "smartphone shopping app"
+    },
+    {
+      "fala": "Mas o cartão ainda fica no bolso. Só 8% deixaram um agente de IA comprar por eles.",
+      "palavra_chave": "cartão",
+      "destaque": "8%",
+      "imagem_busca": "credit card wallet"
+    },
+    {
+      "fala": "Agora, as lojas com agente de compras próprio: quem o usa leva mais 23% de artigos.",
+      "palavra_chave": "agente",
+      "destaque": "+23%",
+      "imagem_busca": "shopping cart ecommerce"
+    },
+    {
+      "fala": "Os agentes servem sobretudo para comparar preços. Se vendes online, põe preços, fotos e descrições claras.",
+      "palavra_chave": "preços",
+      "destaque": null,
+      "imagem_busca": "product photography"
+    },
+    {
+      "fala": "É assim que a IA encontra o teu produto. E tu, já pediste a uma IA para te ajudar a escolher uma compra?",
+      "palavra_chave": "compra",
+      "destaque": null,
+      "imagem_busca": "person using smartphone"
+    }
+  ],
+  "pronuncias": [
+    {
+      "escrito": "IA",
+      "dito": "i-á"
+    },
+    {
+      "escrito": "Black Friday",
+      "dito": "bléque fráidei"
+    },
+    {
+      "escrito": "Cyber Week",
+      "dito": "sáiber uíque"
+    },
+    {
+      "escrito": "Salesforce",
+      "dito": "seilz-fórss"
+    },
+    {
+      "escrito": "75,8",
+      "dito": "setenta e cinco vírgula oito"
+    },
+    {
+      "escrito": "8%",
+      "dito": "oito por cento"
+    },
+    {
+      "escrito": "23%",
+      "dito": "vinte e três por cento"
+    }
+  ],
+  "legenda": "Black Friday 2026: 1 em cada 5 compras online desta Cyber Week vai passar por uma IA.\n\nSegundo a Salesforce, as recomendações e os agentes de IA vão influenciar 75,8 mil milhões de dólares em vendas, ou seja, 21% do total global. Quem chega a uma loja vindo de uma IA tem o dobro da probabilidade de comprar.\n\nMas a confiança ainda não chegou ao cartão: só 8% dos consumidores deixaram um agente comprar por eles.\n\nA lição para quem vende online, seja em Praia, Luanda, Maputo ou Lisboa: os agentes usam-se sobretudo para comparar preços. Se o teu catálogo não tem preços, fotos e descrições claras, a IA não te encontra.\n\nJá pediste a uma IA para te ajudar a escolher uma compra? Conta nos comentários.\n\nFonte: Salesforce",
+  "hashtags": [
+    "blackfriday",
+    "inteligenciaartificial",
+    "ecommerce",
+    "empreendedorismo",
+    "palop"
+  ]
+}
