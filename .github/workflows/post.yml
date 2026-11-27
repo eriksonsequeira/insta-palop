@@ -1,9 +1,6 @@
 name: Criar post
 
 on:
-  schedule:
-    # 1 carrossel/dia (os Reels têm ~4x mais alcance; ver aprendizagens.md). Horas em UTC = Lisboa no inverno.
-    - cron: "43 11 * * *"   # ~11:45 Lisboa · 12:45 Luanda (hora de almoço)
   workflow_dispatch:
     inputs:
       hint:

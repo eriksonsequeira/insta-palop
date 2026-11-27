@@ -1,10 +1,6 @@
 name: Reel diário
 
 on:
-  schedule:
-    # 2 Reels/dia, cada um com um tema novo pesquisado (diferente dos carrosséis).
-    - cron: "17 8 * * *"    # ~08:15 Lisboa · 09:15 Luanda
-    - cron: "13 19 * * *"   # ~19:15 Lisboa · 20:15 Luanda (pico da noite)
   workflow_dispatch:
     inputs:
       post_id:
