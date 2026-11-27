@@ -1,0 +1,108 @@
+{
+  "cenas": [
+    {
+      "fala": "SpaceX tem luz verde para 1 milhão de satélites. São centros de dados de IA em órbita.",
+      "palavra_chave": "satélites",
+      "destaque": "1 milhão",
+      "imagem_busca": "SpaceX Falcon 9 launch"
+    },
+    {
+      "fala": "Quem autorizou foi a FCC, o regulador dos EUA, a 25 de novembro. Nome: Starmind.",
+      "palavra_chave": "FCC",
+      "destaque": "FCC",
+      "imagem_busca": "Federal Communications Commission building"
+    },
+    {
+      "fala": "Hoje há cerca de 17 mil satélites em órbita. Isto é quase 60 vezes mais.",
+      "palavra_chave": "60",
+      "destaque": "~17 mil",
+      "imagem_busca": "satellites orbit Earth"
+    },
+    {
+      "fala": "Mas porquê no espaço? A IA gasta muita energia. A SpaceX promete energia solar quase constante.",
+      "palavra_chave": "energia",
+      "destaque": null,
+      "imagem_busca": "satellite solar panels"
+    },
+    {
+      "fala": "Segundo a empresa, sai mais barato e polui menos. Só que ainda falta provar.",
+      "palavra_chave": "provar",
+      "destaque": null,
+      "imagem_busca": "data center servers"
+    },
+    {
+      "fala": "A licença obriga a começar até 2033. Críticos como a Amazon dizem que pode levar séculos.",
+      "palavra_chave": "séculos",
+      "destaque": "2033",
+      "imagem_busca": "satellite trails night sky"
+    },
+    {
+      "fala": "E não está sozinha. A Google já pôs chips de IA em órbita. A Blue Origin pediu até 51 600 satélites.",
+      "palavra_chave": "Google",
+      "destaque": "51 600",
+      "imagem_busca": "Blue Origin rocket"
+    },
+    {
+      "fala": "A IA do teu telemóvel já corre fora do país. No espaço, ficaria nas mãos de ainda menos empresas.",
+      "palavra_chave": "telemóvel",
+      "destaque": null,
+      "imagem_busca": "smartphone artificial intelligence"
+    },
+    {
+      "fala": "Centros de dados no espaço: futuro real ou exagero?",
+      "palavra_chave": "exagero",
+      "destaque": "?",
+      "imagem_busca": "Earth from space night"
+    }
+  ],
+  "pronuncias": [
+    {
+      "escrito": "SpaceX",
+      "dito": "speis-éks"
+    },
+    {
+      "escrito": "IA",
+      "dito": "i-á"
+    },
+    {
+      "escrito": "FCC",
+      "dito": "éfe-cê-cê"
+    },
+    {
+      "escrito": "EUA",
+      "dito": "Estados Unidos"
+    },
+    {
+      "escrito": "Starmind",
+      "dito": "star-máind"
+    },
+    {
+      "escrito": "Amazon",
+      "dito": "ámazon"
+    },
+    {
+      "escrito": "Google",
+      "dito": "gúgol"
+    },
+    {
+      "escrito": "Blue Origin",
+      "dito": "blu órijin"
+    },
+    {
+      "escrito": "51 600",
+      "dito": "cinquenta e um mil e seiscentos"
+    },
+    {
+      "escrito": "2033",
+      "dito": "dois mil e trinta e três"
+    }
+  ],
+  "legenda": "Um foguetão a levar centros de dados de IA para o espaço. Não é ficção: a FCC autorizou a SpaceX a lançar até 1 milhão de satélites da constelação Starmind.\n\nPara teres noção, hoje há cerca de 17 mil satélites em órbita, somando todos os operadores. A licença obriga a começar até novembro de 2033, a ter 10% lançados até 2035 e 50% até 2038.\n\nA SpaceX diz que a energia solar quase constante torna isto mais barato e menos poluente. Os críticos, incluindo a Amazon, dizem que pode levar séculos. E os astrónomos temem mais lixo espacial.\n\nPara nós, nos PALOP, a questão é outra: quem controla a infraestrutura da IA acaba por influenciar preços e acesso.\n\nCentros de dados no espaço: futuro real ou exagero?\n\nFonte: CNBC, NBC News, Al Jazeera, CNN",
+  "hashtags": [
+    "spacex",
+    "inteligenciaartificial",
+    "satelites",
+    "tecnologia",
+    "palop"
+  ]
+}
