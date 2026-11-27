@@ -47,11 +47,11 @@ jobs:
             ok|sim|publica|publicar|👍)
               python -m ip.main publish "$ID" | tee out.txt
               LINK=$(grep -o 'https://[^ ]*' out.txt | tail -1)
-              git add state.json && git commit -m "publicado $ID" && git push
+              git add state.json && git commit -m "publicado $ID" && bash scripts/push.sh
               gh issue close "$NUM" --comment "✅ Publicado: $LINK" ;;
             não|nao|no|descartar)
               python -m ip.main discard "$ID"
-              git add state.json && git commit -m "descartado $ID" && git push
+              git add state.json && git commit -m "descartado $ID" && bash scripts/push.sh
               gh issue close "$NUM" --reason "not planned" --comment "🗑️ Descartado" ;;
             *) echo "Comentário ignorado" ;;
           esac

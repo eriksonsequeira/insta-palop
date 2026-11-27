@@ -35,4 +35,4 @@ jobs:
           git add agenda.json
           git diff --cached --quiet && exit 0
           git commit -m "agenda" -q
-          for i in 1 2 3; do git pull -q --rebase && git push -q && break; sleep 5; done
+          for i in 1 2 3; do git pull -q --rebase && bash scripts/push.sh -q && break; sleep 5; done

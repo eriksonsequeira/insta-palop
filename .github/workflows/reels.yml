@@ -62,7 +62,7 @@ jobs:
           if [ "${{ inputs.dry_run }}" = "1" ]; then exit 0; fi
           git config user.name "insta-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add media drafts state.json && git commit -m "novo reel" && git push
+          git add media drafts state.json && git commit -m "novo reel" && bash scripts/push.sh
       - name: Guardar vídeo de teste
         if: inputs.dry_run == '1'
         uses: actions/upload-artifact@v4
@@ -78,7 +78,7 @@ jobs:
           python -m ip.main publish-reel "$PID"
           git config user.name "insta-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git pull -q --rebase && git add state.json && git commit -m "reel publicado $PID" && git push || true
+          git add state.json && git commit -m "reel publicado $PID" && bash scripts/push.sh || true
       - name: Avisar se falhou
         if: failure()
         env:

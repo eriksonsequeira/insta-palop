@@ -52,7 +52,7 @@ jobs:
           IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
         run: |
           python -m ip.main publish "${{ steps.create.outputs.post_id }}"
-          git add state.json && git commit -m "publicado ${{ steps.create.outputs.post_id }}" && git push
+          git add state.json && git commit -m "publicado ${{ steps.create.outputs.post_id }}" && bash scripts/push.sh
 
       - name: Avisar se falhou
         if: failure()
