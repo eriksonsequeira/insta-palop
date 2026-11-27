@@ -64,6 +64,14 @@
       "pilar": "negocios",
       "tema": "Vendas do GTA VI no primeiro dia: 3,79 mil milhões de dólares, segundo a Rockstar",
       "status": "rascunho"
+    },
+    {
+      "id": "s20261127-0352",
+      "created": "2026-11-27T03:52+00:00",
+      "tipo": "ferramenta",
+      "pilar": "ia",
+      "tema": "Gemini Notebook (antigo NotebookLM) da Google cria flashcards grátis com imagens, cronómetro e lembretes",
+      "status": "rascunho"
     }
   ]
 }
