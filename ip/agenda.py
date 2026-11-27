@@ -9,7 +9,7 @@ from .config import ROOT
 
 TZ = ZoneInfo("Europe/Lisbon")
 FILE = ROOT / "agenda.json"
-CONTENT = {"reels.yml", "post.yml", "stories.yml"}
+BUSY_NAMES = {"Reel diário", "Criar post", "Stories avulsos", "Estatísticas"}
 
 # (nome, hora Lisboa, workflow, janela máxima de atraso em horas)
 SLOTS = [
@@ -24,13 +24,10 @@ SLOTS = [
 
 def _busy() -> bool:
     """Há alguma tarefa de conteúdo a correr ou em fila? (o grupo de concorrência só guarda 1 em espera)"""
-    out = subprocess.run(["gh", "run", "list", "--limit", "20", "--json", "workflowName,status,path"],
+    out = subprocess.run(["gh", "run", "list", "--limit", "20", "--json", "workflowName,status"],
                          capture_output=True, text=True, check=True).stdout
-    for r in json.loads(out):
-        wf = (r.get("path") or "").split("/")[-1].split("@")[0]
-        if r["status"] in ("queued", "in_progress", "waiting", "pending") and (wf in CONTENT or wf == "stats.yml"):
-            return True
-    return False
+    return any(r["status"] in ("queued", "in_progress", "waiting", "pending", "requested")
+               and r["workflowName"] in BUSY_NAMES for r in json.loads(out))
 
 
 def tick() -> None:
