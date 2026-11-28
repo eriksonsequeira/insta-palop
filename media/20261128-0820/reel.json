@@ -1,0 +1,92 @@
+{
+  "cenas": [
+    {
+      "fala": "Google tem mais de 15 programas grátis que funcionam sem dados móveis.",
+      "palavra_chave": "Google",
+      "destaque": "15 programas",
+      "imagem_busca": "Google office building"
+    },
+    {
+      "fala": "Chama-se Skilling Africa with Google: IA, cibersegurança, marketing digital e gestão num só sítio.",
+      "palavra_chave": "cibersegurança",
+      "destaque": null,
+      "imagem_busca": "students laptop Africa"
+    },
+    {
+      "fala": "Mas o truque é este: descarregas as lições no Wi-Fi e estudas sem ligação.",
+      "palavra_chave": "Wi-Fi",
+      "destaque": null,
+      "imagem_busca": "smartphone Wi-Fi"
+    },
+    {
+      "fala": "Foi pensado para redes lentas. Em Moçambique, onde os dados pesam no bolso, faz diferença.",
+      "palavra_chave": "Moçambique",
+      "destaque": null,
+      "imagem_busca": "Maputo city"
+    },
+    {
+      "fala": "E o melhor: o SCOUT, um tutor de IA que tira dúvidas e ajuda-te a montar o horário.",
+      "palavra_chave": "SCOUT",
+      "destaque": null,
+      "imagem_busca": "student studying smartphone"
+    },
+    {
+      "fala": "Tens um negócio? A Hustle Academy ensina gestão a custo zero.",
+      "palavra_chave": "negócio",
+      "destaque": null,
+      "imagem_busca": "African market vendor"
+    },
+    {
+      "fala": "Só que ainda não há português: está em inglês, suaíli e árabe.",
+      "palavra_chave": "português",
+      "destaque": null,
+      "imagem_busca": "language dictionary books"
+    },
+    {
+      "fala": "Que curso fazias primeiro: IA, marketing digital ou gestão?",
+      "palavra_chave": "curso",
+      "destaque": null,
+      "imagem_busca": ""
+    }
+  ],
+  "pronuncias": [
+    {
+      "escrito": "Google",
+      "dito": "gúgl"
+    },
+    {
+      "escrito": "Skilling Africa with Google",
+      "dito": "skíling áfrica uid gúgl"
+    },
+    {
+      "escrito": "IA",
+      "dito": "i-á"
+    },
+    {
+      "escrito": "Wi-Fi",
+      "dito": "uai-fai"
+    },
+    {
+      "escrito": "SCOUT",
+      "dito": "scáut"
+    },
+    {
+      "escrito": "Hustle Academy",
+      "dito": "hâssel acádemi"
+    },
+    {
+      "escrito": "suaíli",
+      "dito": "suaíli"
+    }
+  ],
+  "convite_falado": "Os cursos funcionam offline. As próximas descobertas chegam online: segue a página.",
+  "convite_seguir": "Os cursos funcionam offline. As próximas descobertas chegam-te online: segue @erikson_sequeira.",
+  "legenda": "A Google juntou mais de 15 programas de formação grátis numa só plataforma. E dá para estudar sem gastar dados móveis.\n\nO Skilling Africa with Google está aberto em toda a África desde 2 de novembro. Tem IA, cloud, cibersegurança, análise de dados, marketing digital e crescimento de pequenos negócios.\n\nComo funciona: descarregas as lições curtas quando tens Wi-Fi e fazes os módulos depois, sem ligação. Entras com a tua conta Google no navegador, sem instalar nenhuma app.\n\nTens dúvidas a meio de um módulo? O SCOUT, o tutor de IA da plataforma, explica-te os termos e sugere o que estudar a seguir.\n\nAtenção: por agora não há português. Está em inglês, suaíli e árabe.\n\nQue curso fazias primeiro: IA, marketing digital ou gestão?\n\nFonte: Google, Ecofin Agency, iAfrica",
+  "hashtags": [
+    "inteligenciaartificial",
+    "google",
+    "formacaogratis",
+    "mocambique",
+    "palop"
+  ]
+}
