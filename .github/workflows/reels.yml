@@ -71,7 +71,7 @@ jobs:
           mkdir -p testes && cp "media/$PID/reel.mp4" testes/reel-teste.mp4
           git config user.name "insta-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add testes/reel-teste.mp4 && git commit -m "reel de teste $PID" && git push origin HEAD:${{ github.ref_name }}
+          git add testes/reel-teste.mp4 && git commit -m "reel de teste $PID" && bash scripts/push.sh
       - name: Guardar vídeo de teste
         if: inputs.dry_run == '1'
         uses: actions/upload-artifact@v4
