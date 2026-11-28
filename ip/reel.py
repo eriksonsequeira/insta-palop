@@ -1,5 +1,5 @@
 """Reels "a página que se escreve sozinha":
-guião (Claude, verificado) → voz (Gemini TTS; edge-tts só como recurso) → ritmo (pausas curtas, ~200 ppm)
+guião (Claude, verificado) → voz (Gemini TTS; edge-tts só como recurso) → ritmo (pausas naturais, ~150 ppm, nunca acelerado)
 → tempos de cada palavra (Whisper) → cenas de ~2 s → Remotion (tipografia cinética, números a contar, SFX, música).
 """
 import base64
@@ -27,13 +27,14 @@ GEMINI_MODELS = [m for m in (os.environ.get("GEMINI_TTS_MODEL"), "gemini-3.8-fla
                              "gemini-3.1-flash-tts-preview", "gemini-2.5-flash-preview-tts") if m]
 GEMINI_VOICE = os.environ.get("GEMINI_TTS_VOICE", "Puck")
 GEMINI_STYLE = ("Lê em português europeu, com sotaque de Lisboa (nunca sotaque do Brasil). Tom de criador de conteúdo "
-                "de tecnologia: confiante, enérgico, ritmo rápido, natural, com ênfase nas palavras importantes. "
+                "de tecnologia: confiante e próximo, ritmo calmo e bem articulado, com uma pequena pausa entre frases e ênfase "
+                "nas palavras importantes. Lê os números devagar. "
                 "Texto a ler:\n\n")
-TARGET_WPM = 200
+TARGET_WPM = 150  # ritmo confortável para PT-PT; a voz nunca é acelerada, só abrandada se preciso
 
 
 class Cena(BaseModel):
-    fala: str = Field(description="1–2 frases curtas, máx. 26 palavras, PT-PT falado; números em algarismos (ex.: 3,79 mil milhões)")
+    fala: str = Field(description="1–2 frases curtas, máx. 20 palavras, PT-PT falado; números em algarismos (ex.: 3,79 mil milhões)")
     palavra_chave: str = Field(description="UMA palavra que aparece literalmente na fala e é a mais importante da cena")
     destaque: str | None = Field(default=None, description="número/palavra curta confirmada (máx. 12 caracteres) ou null")
     imagem_busca: str = Field(default="", description="2–4 palavras EM INGLÊS para procurar uma FOTO REAL do que a cena "
@@ -47,7 +48,7 @@ class Pronuncia(BaseModel):
 
 
 class ReelScript(BaseModel):
-    cenas: list[Cena] = Field(description="6 a 9 cenas, total 90–140 palavras (35–45 s)")
+    cenas: list[Cena] = Field(description="6 a 8 cenas, total 80–105 palavras (35–45 s)")
     pronuncias: list[Pronuncia] = Field(default_factory=list, description="siglas, numerais romanos, marcas e "
                                         "símbolos que um leitor automático leria mal")
     legenda: str = Field(description="legenda do Reel, 300–900 caracteres, termina com pergunta; sem hashtags")
@@ -145,7 +146,7 @@ def _edge_tts(text: str, out_wav: Path) -> None:
 
     import edge_tts
     mp3 = out_wav.with_suffix(".mp3")
-    asyncio.run(edge_tts.Communicate(text, "pt-PT-DuarteNeural", rate="+10%").save(str(mp3)))
+    asyncio.run(edge_tts.Communicate(text, "pt-PT-DuarteNeural", rate="+0%").save(str(mp3)))
     _run("ffmpeg", "-y", "-loglevel", "error", "-i", str(mp3), str(out_wav))
     mp3.unlink()
     print("[reel] voz edge-tts (recurso)")
@@ -186,14 +187,14 @@ def narrate(text: str, work: Path) -> Path:
         _edge_tts(text, raw)
     else:
         raise RuntimeError("Falta GEMINI_API_KEY para a voz do Reel")
-    # pausas curtas (máx. ~0,3 s) e ritmo alvo sem mudar o tom
+    # pausas naturais (máx. ~0,55 s) e ritmo alvo sem mudar o tom (só abranda, nunca acelera)
     tight = work / "tight.wav"
     _run("ffmpeg", "-y", "-loglevel", "error", "-i", str(raw), "-af",
-         "silenceremove=start_periods=1:start_threshold=-45dB:stop_periods=-1:stop_duration=0.3:stop_threshold=-45dB",
+         "silenceremove=start_periods=1:start_threshold=-45dB:stop_periods=-1:stop_duration=0.55:stop_threshold=-45dB",
          "-ar", "44100", "-ac", "1", str(tight))
     words = len(text.split())
     wpm = words / (_dur(tight) / 60)
-    tempo = max(1.0, min(1.22, TARGET_WPM / wpm))
+    tempo = max(0.9, min(1.0, TARGET_WPM / wpm))
     out = work / "narration.wav"
     _run("ffmpeg", "-y", "-loglevel", "error", "-i", str(tight), "-af",
          f"atempo={tempo:.3f},loudnorm=I=-16:TP=-1.5:LRA=11", "-ar", "44100", "-ac", "2", str(out))
