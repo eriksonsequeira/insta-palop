@@ -30,7 +30,7 @@ GEMINI_STYLE = ("Lê em português europeu, com sotaque de Lisboa (nunca sotaque
                 "de tecnologia: confiante e próximo, ritmo calmo e bem articulado, com uma pequena pausa entre frases e ênfase "
                 "nas palavras importantes. Lê os números devagar. "
                 "Texto a ler:\n\n")
-OUTRO = 2.2  # segundos do cartão final (conta, guardar, partilhar, seguir)
+OUTRO = 3.2  # segundos do cartão final (conta + convite para seguir, para dar tempo de ler)
 TARGET_WPM = 150  # ritmo confortável para PT-PT; a voz nunca é acelerada, só abrandada se preciso
 
 
@@ -53,6 +53,10 @@ class ReelScript(BaseModel):
     cenas: list[Cena] = Field(description="6 a 8 cenas, total 80–105 palavras (35–45 s)")
     pronuncias: list[Pronuncia] = Field(default_factory=list, description="siglas, numerais romanos, marcas e "
                                         "símbolos que um leitor automático leria mal")
+    convite_falado: str = Field(default="", description="convite ÚNICO para seguir a página, dito no fim do Reel "
+                                "depois da pergunta: máx. 16 palavras, ligado ao tema, sem '@' (diz 'segue a página')")
+    convite_seguir: str = Field(default="", description="versão ESCRITA do convite para a legenda, com o @ da página, "
+                                "máx. 120 caracteres")
     legenda: str = Field(description="legenda do Reel, 300–900 caracteres, termina com pergunta; sem hashtags")
     hashtags: list[str]
 
@@ -62,7 +66,7 @@ Estrutura (método de reels de alta retenção):
 - Cena 1 (0–3 s): o assunto na PRIMEIRA palavra e um gancho contraintuitivo ou o dado mais chocante. Nada de "Olá".
 - Depois: prova/autoridade → virada → mecanismo em blocos curtos → "sobe a aposta" → veredito.
 - Uma palavra de virada a cada 8–12 s ("Só que", "Mas", "Agora,", "E o melhor:").
-- Última cena: termina numa PERGUNTA para os comentários (sem "segue-me").
+- Última cena: termina numa PERGUNTA para os comentários. Depois dela vem o convite_falado (não o ponhas nas cenas).
 - Frases curtas e fechadas. Linguagem falada de Portugal (tu). Números em algarismos como se escrevem normalmente.
 - Escreve para ser OUVIDO: uma ideia por frase, sem parênteses nem listas, no máximo 2 números por cena.
 - O gancho da cena 1 tem de dizer em voz alta o mesmo número que aparece no ecrã (nada de "21%" escrito e "1 em cada 5" dito).
@@ -74,8 +78,10 @@ Estrutura (método de reels de alta retenção):
 
 
 def write_script(post: dict, fix: str = "") -> ReelScript:
+    from . import convite, state
     data = {k: post[k] for k in ("pilar", "tema", "capa_titulo", "capa_subtitulo", "slides", "cta_titulo", "fontes")}
-    prompt = f"{RULES}\n\nPOST:\n{json.dumps(data, ensure_ascii=False, indent=1)}"
+    prompt = (f"{RULES}\n\n{convite.RULES}\nO convite_falado é dito em voz alta: frase falada, natural, sem '@'.\n"
+              f"{convite.avoid_block(state.load())}\nPOST:\n{json.dumps(data, ensure_ascii=False, indent=1)}")
     if fix:
         prompt += f"\n\nUm verificador reprovou a versão anterior. Corrige TODOS estes pontos:\n{fix}"
     if os.environ.get("CLAUDE_CODE_OAUTH_TOKEN") or os.environ.get("USE_CLAUDE_CLI") == "1":
@@ -337,6 +343,11 @@ def build_sentences(script: ReelScript, times: list, total: float) -> list[dict]
 def render(post: dict, script: ReelScript, out_dir: Path) -> Path:
     work = out_dir / "_work"
     work.mkdir(parents=True, exist_ok=True)
+    if script.convite_falado.strip():  # o convite para seguir é a última coisa que se ouve
+        words = script.convite_falado.split()
+        key = next((w for w in words if _norm(w).startswith("segue")), words[0])
+        script = script.model_copy(update={"cenas": [*script.cenas, Cena(fala=script.convite_falado.strip(),
+                                                                         palavra_chave=key)]})
     text = "\n\n".join(c.fala for c in script.cenas)
     tokens = text.split()
     said, idx = spoken_tokens(tokens, script.pronuncias)
@@ -375,6 +386,7 @@ def render(post: dict, script: ReelScript, out_dir: Path) -> Path:
         music = "music.mp3"
     props = {"fps": 30, "duration": round(total + OUTRO, 2), "outro": OUTRO, "audio": "narration.wav", "music": music,
              "accent": ACCENTS[post["pilar"]], "label": LABELS[post["pilar"]], "handle": IG_HANDLE,
+             "convite": script.convite_seguir.strip() or None,
              "sentences": sentences}
     (pub / "props.json").write_text(json.dumps(props, ensure_ascii=False))
     out = (out_dir / "reel.mp4").resolve()

@@ -45,7 +45,7 @@ def build_html(post: Post) -> str:
         '<div class="actions">'
         '<div class="act"><b>↓</b>Guarda para rever depois</div>'
         '<div class="act"><b>↗</b>Partilha com quem precisa</div>'
-        f'<div class="act"><b>+</b>Segue {escape(IG_HANDLE)}</div>'
+        f'<div class="act"><b>+</b>{escape(post.convite_seguir or "Segue " + IG_HANDLE)}</div>'
         f"</div>{_footer(n - 1, n)}</section>"
     )
     tpl = (TEMPLATES / "carousel.html").read_text()
@@ -119,7 +119,8 @@ def build_pill_html(p: StoryPill) -> str:
         f"{big}<h2>{escape(p.titulo)}</h2>"
         f'<p class="body">{escape(p.texto)}</p>'
         f'<p class="src">Fonte: {escape(p.fonte_nome)}</p>'
-        f'<div class="follow">Segue <b>{escape(IG_HANDLE)}</b> para mais tecnologia, IA e negócios</div></section>'
+        + (f'<div class="follow">{escape(p.convite_seguir)}</div></section>' if p.convite_seguir else
+           f'<div class="follow">Segue <b>{escape(IG_HANDLE)}</b> para mais tecnologia, IA e negócios</div></section>')
     )
     tpl = (TEMPLATES / "carousel.html").read_text()
     return tpl.replace("__ACCENT__", ACCENTS[p.pilar]).replace("</head>", STORY_CSS + "</head>").replace("__SLIDES__", section)
