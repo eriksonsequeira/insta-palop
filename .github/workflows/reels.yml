@@ -28,7 +28,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: main
+          ref: ${{ github.ref_name }}  # main nas execuções normais; outro ramo só para testes (dry_run)
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
