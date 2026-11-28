@@ -31,6 +31,18 @@ def collect() -> dict:
     me = instagram._req("GET", IG_USER_ID, fields="followers_count,media_count")
     data["conta"].append({"data": datetime.now(timezone.utc).isoformat(timespec="minutes"),
                           "seguidores": me.get("followers_count"), "publicacoes": me.get("media_count")})
+    try:  # onde estão os seguidores (países e cidades) — orienta a escolha dos temas
+        pub = {}
+        for bd, key in (("country", "paises"), ("city", "cidades"), ("age", "idades")):
+            d = instagram._req("GET", f"{IG_USER_ID}/insights", metric="follower_demographics", period="lifetime",
+                               metric_type="total_value", breakdown=bd)
+            res = d["data"][0]["total_value"]["breakdowns"][0]["results"]
+            pub[key] = dict(sorted(((r["dimension_values"][0], r["value"]) for r in res), key=lambda kv: -kv[1])[:15])
+        pub["atualizado"] = datetime.now(timezone.utc).isoformat(timespec="minutes")
+        data["publico"] = pub
+        print(f"[stats] público: {list(pub['paises'].items())[:5]}")
+    except Exception as e:  # noqa: BLE001
+        print(f"[stats] público indisponível: {str(e)[:120]}")
     media = instagram._req("GET", f"{IG_USER_ID}/media", limit=40,
                            fields="id,permalink,timestamp,media_type,media_product_type,caption,like_count,comments_count")
     items = media.get("data", [])
