@@ -1,7 +1,9 @@
 name: Agenda
 
 # Única tarefa agendada: verifica de 15 em 15 min o que já devia ter saído e lança uma de cada vez.
-# Também pode ser "acordada" por um despertador externo (workflow_dispatch), porque o agendador do GitHub atrasa.
+# O agendador do GitHub quase nunca dispara, por isso cada execução espera ~14 min e volta a lançar-se a si própria
+# (estafeta). O cron fica como reserva: se a estafeta parar, a próxima execução agendada recomeça-a.
+# O grupo de concorrência guarda no máximo 1 execução em espera, por isso nunca se juntam duas estafetas.
 on:
   schedule:
     - cron: "*/15 * * * *"
@@ -18,7 +20,7 @@ permissions:
 jobs:
   tick:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
         with:
@@ -35,4 +37,11 @@ jobs:
           git add agenda.json
           git diff --cached --quiet && exit 0
           git commit -m "agenda" -q
-          for i in 1 2 3; do git pull -q --rebase && bash scripts/push.sh -q && break; sleep 5; done
+          for i in 1 2 3; do bash scripts/push.sh && break; sleep 5; done
+      - name: Estafeta (lança a próxima verificação daqui a ~14 min)
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          sleep 840
+          gh workflow run agenda.yml --ref main

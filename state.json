@@ -76,7 +76,7 @@
       "tipo": "noticia",
       "pilar": "ia",
       "tema": "Tidal proíbe e remove milhões de músicas 100% geradas por IA",
-      "status": "rascunho"
+      "status": "publicado"
     },
     {
       "id": "s20261126-1619",
@@ -84,7 +84,7 @@
       "tipo": "curiosidade",
       "pilar": "tecnologia",
       "tema": "A primeira webcam da internet vigiava uma cafeteira em Cambridge",
-      "status": "rascunho"
+      "status": "publicado"
     },
     {
       "id": "s20261126-1624",
@@ -92,7 +92,7 @@
       "tipo": "hype",
       "pilar": "negocios",
       "tema": "Vendas do GTA VI no primeiro dia: 3,79 mil milhões de dólares, segundo a Rockstar",
-      "status": "rascunho"
+      "status": "publicado"
     },
     {
       "id": "s20261127-0352",
@@ -100,7 +100,7 @@
       "tipo": "ferramenta",
       "pilar": "ia",
       "tema": "Gemini Notebook (antigo NotebookLM) da Google cria flashcards grátis com imagens, cronómetro e lembretes",
-      "status": "rascunho"
+      "status": "publicado"
     }
   ]
 }
