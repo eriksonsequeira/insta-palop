@@ -26,7 +26,7 @@ def table() -> str:
                      "inicio_legenda": r.get("legenda_inicio")})
     rows.sort(key=lambda x: x["data"], reverse=True)
     conta = d["conta"][-14:]
-    return json.dumps({"conta": conta, "publicacoes": rows[:80]}, ensure_ascii=False)
+    return json.dumps({"conta": conta, "publico": d.get("publico", {}), "publicacoes": rows[:80]}, ensure_ascii=False)
 
 
 def run() -> None:

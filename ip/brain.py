@@ -19,6 +19,14 @@ FORMATOS = {
     "caso-de-negocio": "Caso real de uma empresa/startup (de preferência africana ou lusófona): o que fez, números, lição.",
     "tendencia": "Tendência ou dado recente (relatório, estudo) e o que significa para negócios e carreiras nos PALOP.",
     "passo-a-passo": "Tutorial curto: como fazer algo concreto com IA/tecnologia, passo a passo.",
+    "tech-visual": "Tecnologia que se VÊ e impressiona (o tema com mais gostos e guardados desta conta): robôs, gadgets, "
+                   "carros elétricos/autónomos, drones, invenções, lançamentos de produtos — recente e com imagem real.",
+    "ferramenta-gratis": "Ferramenta de IA/tecnologia NOVA e GRÁTIS (ou quase) que poupa horas ou dinheiro: o que faz, "
+                         "como começar hoje, para quem serve. Tem de ser fácil de experimentar no telemóvel.",
+    "dinheiro": "Dinheiro e carreira: como pessoas e pequenos negócios estão a ganhar dinheiro, poupar ou arranjar "
+                "trabalho com IA/tecnologia — casos reais com números, nada de promessas de enriquecimento rápido.",
+    "curiosidade": "\"Sabias que…?\": um facto surpreendente e verificável de tecnologia ou negócios que dá vontade de "
+                   "mandar a um amigo (recordes, bastidores de marcas famosas, números inacreditáveis).",
     "hype": "Tema EM ALTA esta semana (o que toda a gente está a comentar: jogos como o GTA 6, filmes/séries, futebol, música, memes virais, lançamentos, celebridades, eventos). Primeiro descobre o que está mesmo em tendência (Google Trends, YouTube, X/TikTok, notícias) e depois liga-o de forma inteligente a tecnologia, IA ou negócios: os números do negócio, a tecnologia por trás, a estratégia de marketing, a lição para empreendedores. O gancho é o hype; o valor é a ligação. Evita política partidária, tragédias e polémicas pessoais.",
 }
 
@@ -104,9 +112,40 @@ FOCOS = {
     "guine-stp": "Tema com foco na GUINÉ-BISSAU ou em SÃO TOMÉ E PRÍNCIPE (se não houver notícias recentes relevantes, usa os PALOP em geral).",
     "lusofonia": "Tema de PORTUGAL ou BRASIL com interesse para os PALOP (startups, IA, investimento, oportunidades).",
 }
-# metade global, o resto em rotação
-FOCO_CICLO = ["global", "cabo-verde", "global", "africa", "global", "mocambique",
-              "global", "angola", "global", "lusofonia", "global", "guine-stp"]
+# 2/3 global (temas com público maior); 1/3 PALOP/África, mas só com gancho forte (ver ÍMAN DE SEGUIDORES)
+FOCO_CICLO = ["global", "global", "cabo-verde", "global", "global", "angola",
+              "global", "global", "mocambique", "global", "global", "africa",
+              "global", "global", "lusofonia", "global", "global", "guine-stp"]
+# ordem de prioridade dos formatos (fora o "Em alta", que entra 1 em cada 3)
+ROTACAO = ["tech-visual", "ferramenta-gratis", "noticia-explicada", "dinheiro", "curiosidade",
+           "caso-de-negocio", "passo-a-passo", "mito-realidade", "lista-pratica"]
+
+IMAN = """ÍMAN DE SEGUIDORES (o objetivo nº 1 é trazer pessoas NOVAS ao perfil):
+1. Antes de escrever, pesquisa e lista mentalmente 5 temas candidatos que cumpram o pilar/formato/foco.
+2. Dá a cada um uma nota de 1 a 5 em: surpresa/curiosidade · algo que se pode MOSTRAR (imagem/vídeo real) ·
+   utilidade imediata (poupa tempo/dinheiro, carreira) · partilhável ("mandava isto a um amigo?") ·
+   interesse para quem NÃO é da área de tecnologia.
+3. Escolhe o de maior nota total. Teste final: um desconhecido que veja só o gancho para de fazer scroll?
+   Se não, escolhe outro.
+- Temas locais (PALOP) só entram com um gancho forte: um recorde, dinheiro, uma estreia, algo que afeta o dia a dia.
+  Um relatório ou anúncio institucional sem impacto visível NÃO serve.
+- Prefere marcas e nomes que toda a gente conhece (Google, Apple, Tesla, WhatsApp, TikTok, Netflix, FIFA…).
+- Nada de clickbait falso: o gancho tem de ser cumprido com factos verificados."""
+
+
+def publico() -> str:
+    """Onde estão os seguidores (das estatísticas diárias), para o tema servir quem realmente vê a conta."""
+    try:
+        from .stats import STATS
+        pais = json.loads(STATS.read_text()).get("publico", {}).get("paises", {})
+    except Exception:  # noqa: BLE001
+        return ""
+    top = sorted(pais.items(), key=lambda kv: -kv[1])[:6]
+    if not top:
+        return ""
+    tot = sum(pais.values()) or 1
+    return ("ONDE ESTÃO OS SEGUIDORES (códigos de país): " + ", ".join(f"{k} {100 * v / tot:.0f}%" for k, v in top)
+            + ". Escolhe temas que interessem a estas pessoas.\n\n")
 
 
 def choose_foco(history: list[dict]) -> str:
@@ -120,6 +159,7 @@ def choose_angle(history: list[dict]) -> tuple[str, str]:
     fc = Counter(p["formato"] for p in last)
     prev_pilar = last[-1]["pilar"] if last else None
     pilar = min((p for p in PILARES if p != prev_pilar), key=lambda p: (pc[p], PILARES.index(p)))
+    # formatos que atraem gente nova primeiro; relatórios/tendências saem da rotação (25–33 de alcance nos dados)
     # um conteúdo "em alta" a cada 3; notícias são o formato principal; o resto alterna
     if history and all(p.get("formato") != "hype" for p in history[-2:]):  # 1 em cada 3 é "Em alta"
         hc = Counter(p["pilar"] for p in history if p.get("formato") == "hype")
@@ -127,8 +167,7 @@ def choose_angle(history: list[dict]) -> tuple[str, str]:
         hp = min((x for x in PILARES if x != last_hype), key=lambda x: (hc[x], PILARES.index(x)))
         return hp, "hype"
     fc.pop("hype", None)
-    formato = "noticia-explicada" if fc["noticia-explicada"] <= sum(fc.values()) / 3 else \
-        min((f for f in FORMATOS if f != "hype"), key=lambda f: (fc[f], list(FORMATOS).index(f)))
+    formato = min(ROTACAO, key=lambda f: (fc[f], ROTACAO.index(f)))
     return pilar, formato
 
 
@@ -149,7 +188,7 @@ def build_prompt(pilar: str, formato: str, history: list[dict], hint: str = "", 
         + "Escolhe o tema com mais interesse para o público e que NÃO repita nenhum destes temas já publicados:\n"
         f"{temas}\n\n"
         + (f"Indicação extra: {hint}\n\n" if hint else "")
-        + "Verifica cada facto com pelo menos uma fonte antes de o usar.\n\n"
+        + "Verifica cada facto com pelo menos uma fonte antes de o usar.\n\n" + IMAN + "\n\n" + publico()
         + convite.RULES + avoid
     )
 
