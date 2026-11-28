@@ -30,13 +30,15 @@ GEMINI_STYLE = ("Lê em português europeu, com sotaque de Lisboa (nunca sotaque
                 "de tecnologia: confiante e próximo, ritmo calmo e bem articulado, com uma pequena pausa entre frases e ênfase "
                 "nas palavras importantes. Lê os números devagar. "
                 "Texto a ler:\n\n")
+OUTRO = 2.2  # segundos do cartão final (conta, guardar, partilhar, seguir)
 TARGET_WPM = 150  # ritmo confortável para PT-PT; a voz nunca é acelerada, só abrandada se preciso
 
 
 class Cena(BaseModel):
     fala: str = Field(description="1–2 frases curtas, máx. 20 palavras, PT-PT falado; números em algarismos (ex.: 3,79 mil milhões)")
     palavra_chave: str = Field(description="UMA palavra que aparece literalmente na fala e é a mais importante da cena")
-    destaque: str | None = Field(default=None, description="número/palavra curta confirmada (máx. 12 caracteres) ou null")
+    destaque: str | None = Field(default=None, description="número curto (máx. 12 caracteres) que aparece ESCRITO "
+                                 "IGUAL na fala desta cena (ex.: fala '75,8 mil milhões' → '75,8 mil M$'); null se não houver")
     imagem_busca: str = Field(default="", description="2–4 palavras EM INGLÊS para procurar uma FOTO REAL do que a cena "
                               "mostra no Wikimedia Commons (ex.: 'Take-Two Interactive headquarters', 'video game "
                               "controller', 'Luanda skyline'); vazio se não houver nada concreto para mostrar")
@@ -62,6 +64,8 @@ Estrutura (método de reels de alta retenção):
 - Uma palavra de virada a cada 8–12 s ("Só que", "Mas", "Agora,", "E o melhor:").
 - Última cena: termina numa PERGUNTA para os comentários (sem "segue-me").
 - Frases curtas e fechadas. Linguagem falada de Portugal (tu). Números em algarismos como se escrevem normalmente.
+- Escreve para ser OUVIDO: uma ideia por frase, sem parênteses nem listas, no máximo 2 números por cena.
+- O gancho da cena 1 tem de dizer em voz alta o mesmo número que aparece no ecrã (nada de "21%" escrito e "1 em cada 5" dito).
 - Usa SÓ os factos do post (não acrescentes factos novos).
 - pronuncias: lista TODAS as siglas, numerais romanos (VI → seis), símbolos e nomes estrangeiros da fala, com a leitura
   correta em português de Portugal (ex.: "GTA VI" → "GTA seis", "IA" → "i-á", "CEO" → "cê-é-ó", "Take-Two" → "teik-tu").
@@ -253,13 +257,46 @@ def align(audio: Path, tokens: list[str]) -> list[tuple[float, float]]:
 
 # ---------------- cenas ----------------
 
+# palavras que nunca devem ficar sozinhas no fim de um bloco de legenda ("Segundo a", "IA para", "da probabilidade de")
+WEAK = {"a", "o", "as", "os", "um", "uma", "uns", "umas", "de", "do", "da", "dos", "das", "em", "no", "na", "nos", "nas",
+        "por", "pelo", "pela", "para", "com", "sem", "e", "ou", "que", "se", "mas", "ao", "aos", "num", "numa",
+        "seu", "sua", "meu", "minha", "teu", "tua", "este", "esta", "esse", "essa", "mais", "menos", "muito", "ja",
+        "nao", "quem", "como", "quando", "onde", "sao", "foi", "vai", "vao", "ha", "ser", "estar", "ter", "tem",
+        "pode", "podem", "deve", "estao", "esta", "the"}  # já sem acentos (comparado com _norm)
+
+
+def _weak(w: str) -> bool:
+    return _norm(w) in WEAK or re.fullmatch(r"\d+([.,]\d+)?", w) is not None
+
+
+def _destaque_ok(dest: str, fala: str) -> bool:
+    """O número em destaque tem de ser o que se ouve (nada de "21%" no ecrã enquanto a voz diz "1 em cada 5")."""
+    nums = re.findall(r"\d+(?:[.,]\d+)?", dest)
+    if nums:
+        return all(n in fala for n in nums)
+    key = _norm(dest)
+    return bool(key) and key in _norm(fala)
+
+
 def build_sentences(script: ReelScript, times: list, total: float) -> list[dict]:
     toks = [(ci, w) for ci, c in enumerate(script.cenas) for w in c.fala.split()]
     chunks, cur = [], []
     for i, (ci, w) in enumerate(toks):
         cur.append(i)
         end_cena = i + 1 == len(toks) or toks[i + 1][0] != ci
-        if end_cena or re.search(r"[.!?:;]$", w) or len(cur) >= 6 or (w.endswith(",") and len(cur) >= 3):
+        hard = end_cena or re.search(r"[.!?:;]$", w)
+        soft = len(cur) >= 5 or (w.endswith(",") and len(cur) >= 3)
+        # um bloco só fecha num ponto natural: nunca a meio de "a Salesforce" ou "1 em cada 5"
+        # palavras até ao próximo fim de frase: não deixar 1–2 palavras órfãs ("claras.", "em órbita.")
+        rest = 0
+        for _, nw in toks[i + 1:i + 4]:
+            rest += 1
+            if re.search(r"[.!?:;]$", nw):
+                break
+        else:
+            rest = 99
+        orphan = 0 < rest <= 2 and len(cur) + rest <= 9
+        if hard or (soft and not _weak(w) and not orphan) or len(cur) >= 8:
             chunks.append(cur)
             cur = []
     merged = []  # juntar blocos curtos demais (< 1,2 s) ao anterior da mesma cena
@@ -268,6 +305,7 @@ def build_sentences(script: ReelScript, times: list, total: float) -> list[dict]
             prev = merged[-1]
             d = times[ch[-1]][1] - times[prev[0]][0]
             if (times[prev[-1]][1] - times[prev[0]][0]) < 1.2 and toks[prev[0]][0] == toks[ch[0]][0] \
+                    and not re.search(r"[.!?]$", toks[prev[-1]][1]) \
                     and len(prev) + len(ch) <= 9 and d < 3.5:
                 prev.extend(ch)
                 continue
@@ -280,7 +318,8 @@ def build_sentences(script: ReelScript, times: list, total: float) -> list[dict]
         words = [{"text": toks[i][1], "start": round(times[i][0], 3), "end": round(times[i][1], 3),
                   "key": bool(kw) and _norm(toks[i][1]) == kw} for i in ch]
         dest = None
-        if cena.destaque and ci not in seen:
+        # o destaque aparece no bloco em que o número é dito (não antes)
+        if cena.destaque and ci not in seen and _destaque_ok(cena.destaque, " ".join(toks[i][1] for i in ch)):
             dest = cena.destaque
             seen.add(ci)
         out.append({"start": max(0.0, round(words[0]["start"] - 0.1, 3)), "words": words, "destaque": dest, "cena": ci})
@@ -309,7 +348,7 @@ def render(post: dict, script: ReelScript, out_dir: Path) -> Path:
     for j in range(len(times)):  # (segurança) tokens sem tempo herdam o anterior
         if times[j] is None:
             times[j] = times[j - 1] if j else (0.0, 0.2)
-    total = round(_dur(audio) + 0.6, 2)
+    total = round(_dur(audio) + 0.6, 2)  # fim da voz (o cartão final vem depois)
     sentences = build_sentences(script, times, total)
     pub = STUDIO / "public"
     from . import refimages
@@ -334,7 +373,7 @@ def render(post: dict, script: ReelScript, out_dir: Path) -> Path:
     if tracks:
         shutil.copy(random.choice(tracks), pub / "music.mp3")
         music = "music.mp3"
-    props = {"fps": 30, "duration": total, "audio": "narration.wav", "music": music,
+    props = {"fps": 30, "duration": round(total + OUTRO, 2), "outro": OUTRO, "audio": "narration.wav", "music": music,
              "accent": ACCENTS[post["pilar"]], "label": LABELS[post["pilar"]], "handle": IG_HANDLE,
              "sentences": sentences}
     (pub / "props.json").write_text(json.dumps(props, ensure_ascii=False))

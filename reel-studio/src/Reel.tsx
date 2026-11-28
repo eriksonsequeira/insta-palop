@@ -37,6 +37,7 @@ export type ReelProps = {
   label: string;
   handle: string;
   sentences: Sentence[];
+  outro?: number; // segundos do cartão final
 };
 
 /* zonas seguras do Instagram no telemóvel (1080x1920):
@@ -73,9 +74,9 @@ function fitWords(words: { text: string; key?: boolean }[], max: number, height:
   return 52;
 }
 
-function fitOneLine(text: string, max: number): number {
-  for (let size = max; size >= 60; size -= 6) if (wordW(text, size) <= TEXT_W) return size;
-  return 60;
+function fitOneLine(text: string, max: number, min = 60): number {
+  for (let size = max; size >= min; size -= 4) if (wordW(text, size) <= TEXT_W) return size;
+  return min;
 }
 
 const INK = "#F4F1EA";
@@ -125,7 +126,9 @@ const CountUp: React.FC<{ text: string; accent: string; frame: number; fps: numb
   const m = text.match(/^(\D*?)(\d+(?:[.,]\d+)?)(.*)$/);
   const pop = spring({ frame, fps, config: { damping: 10, stiffness: 170 } });
   let shown = text;
-  if (m) {
+  const val = m ? parseFloat(m[2].replace(/\s/g, "").replace(",", ".")) : 0;
+  const isYear = !!m && /^(19|20)\d\d$/.test(m[2]);
+  if (m && val >= 10 && !isYear && !/^\s\d/.test(m[3])) {
     const [, pre, num, post] = m;
     const dec = /[.,]/.test(num) ? num.split(/[.,]/)[1].length : 0;
     const target = parseFloat(num.replace(",", "."));
@@ -171,8 +174,6 @@ const SentenceView: React.FC<{ s: Sentence; accent: string; label: string }> = (
   const reserved = (s.first ? 110 : 0) + (s.destaque ? 230 : 0);
   const height = (card ? 1920 - 950 - SAFE.bottom : 1920 - SAFE.top - SAFE.bottom) - reserved;
   const size = React.useMemo(() => fitWords(s.words, n <= 3 ? 150 : n <= 6 ? 124 : 104, height), [s.words, n, height]);
-  const keyWord = s.words.find((w) => w.key)?.text.replace(/[.,!?;:]/g, "");
-  const ghostX = interpolate(frame, [0, dur], [40, -60], { extrapolateRight: "clamp" });
   const numberAt = s.destaque ? (s.words.find((w) => /\d/.test(w.text))?.start ?? s.words[0]?.start ?? s.start) : 0;
   return (
     <AbsoluteFill style={{ transform: `translateX(${dx}px) scale(${scale})` }}>
@@ -198,39 +199,6 @@ const SentenceView: React.FC<{ s: Sentence; accent: string; label: string }> = (
           }}
         >
           <Img src={staticFile(s.image)} style={{ width: "100%", height: "100%", objectFit: "cover", transform: `scale(${1.02 + 0.06 * (frame / Math.max(1, dur))})` }} />
-        </div>
-      )}
-      <div
-        style={{
-          position: "absolute",
-          width: 760,
-          height: 760,
-          borderRadius: "50%",
-          border: `2px solid ${accent}33`,
-          boxShadow: `inset 0 0 120px ${accent}14`,
-          left: dir > 0 ? 520 : -200,
-          top: 180,
-          transform: `rotate(${frame * 0.6}deg) scale(${interpolate(frame, [0, 10], [0.92, 1], { extrapolateRight: "clamp" })})`,
-          borderTopColor: accent,
-        }}
-      />
-      {keyWord && !card && (
-        <div
-          style={{
-            position: "absolute",
-            top: 1150,
-            left: ghostX,
-            whiteSpace: "nowrap",
-            fontFamily: DISPLAY,
-            fontWeight: 700,
-            fontSize: 250,
-            letterSpacing: "-0.05em",
-            color: accent,
-            opacity: 0.06,
-            textTransform: "uppercase",
-          }}
-        >
-          {keyWord}
         </div>
       )}
       <AbsoluteFill
@@ -266,7 +234,8 @@ const SentenceView: React.FC<{ s: Sentence; accent: string; label: string }> = (
         <div style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: size, lineHeight: 1.08, letterSpacing: "-0.03em" }}>
           {s.words.map((w, i) => {
             const local = (t - w.start) * fps;
-            const p = spring({ frame: local, fps, config: { damping: 15, stiffness: 260 } });
+            // a frase inteira entra logo (lê-se de uma vez); cada palavra acende quando é dita
+            const p = spring({ frame: frame - i * 1.2, fps, config: { damping: 16, stiffness: 220 } });
             const spoken = t >= w.start - 0.02;
             const speaking = t >= w.start && t < w.end + 0.08;
             return (
@@ -276,7 +245,7 @@ const SentenceView: React.FC<{ s: Sentence; accent: string; label: string }> = (
                   position: "relative",
                   display: "inline-block",
                   marginRight: "0.24em",
-                  opacity: spoken ? p : 0,
+                  opacity: p * (spoken ? 1 : 0.38),
                   transform: `translateY(${(1 - p) * 26}px) scale(${w.key ? 1 + 0.06 * (speaking ? 1 : 0) : 1})`,
                   color: w.key ? accent : speaking ? INK : "rgba(244,241,234,.92)",
                   fontSize: w.key ? "1.28em" : "1em",
@@ -308,23 +277,63 @@ const SentenceView: React.FC<{ s: Sentence; accent: string; label: string }> = (
   );
 };
 
+/* ---------- cartão final ---------- */
+const EndCard: React.FC<{ accent: string; handle: string; label: string }> = ({ accent, handle, label }) => {
+  const f = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const a = (d: number) => spring({ frame: f - d, fps, config: { damping: 16, stiffness: 180 } });
+  const item = (d: number): React.CSSProperties => ({ opacity: a(d), transform: `translateY(${(1 - a(d)) * 30}px)` });
+  return (
+    <AbsoluteFill
+      style={{
+        padding: `${SAFE.top}px ${SAFE.right}px ${SAFE.bottom}px ${SAFE.left}px`,
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        opacity: interpolate(f, [0, 6], [0, 1], { extrapolateRight: "clamp" }),
+      }}
+    >
+      <div style={{ ...item(0), fontFamily: BODY, fontWeight: 800, fontSize: 30, letterSpacing: "0.14em", textTransform: "uppercase", color: accent, marginBottom: 36 }}>
+        {label}
+      </div>
+      <div style={{ ...item(4), fontFamily: DISPLAY, fontWeight: 700, fontSize: Math.min(104, fitOneLine(handle, 104)), lineHeight: 1.02, letterSpacing: "-0.04em", color: INK }}>
+        {handle}
+      </div>
+      <div style={{ ...item(9), height: 8, width: 180, borderRadius: 8, background: accent, margin: "40px 0" }} />
+      {["Guarda para rever", "Partilha com quem precisa", "Segue para mais"].map((t, i) => (
+        <div key={t} style={{ ...item(13 + i * 4), fontFamily: BODY, fontWeight: 600, fontSize: 46, color: "rgba(244,241,234,.9)", marginBottom: 22, display: "flex", alignItems: "center", gap: 22 }}>
+          <span style={{ width: 16, height: 16, borderRadius: 99, background: accent, display: "inline-block" }} />
+          {t}
+        </div>
+      ))}
+    </AbsoluteFill>
+  );
+};
+
 /* ---------- composição ---------- */
 export const Reel: React.FC<ReelProps> = (p) => {
   const f = useCurrentFrame();
   const { fps, durationInFrames } = useVideoConfig();
   const S = p.sentences;
+  const outroF = Math.round((p.outro ?? 0) * fps);
+  const contentEnd = durationInFrames - outroF;
   return (
     <AbsoluteFill style={{ background: BG }}>
       <Background accent={p.accent} />
       {S.map((s, i) => {
         const from = Math.round(s.start * fps);
-        const to = i === S.length - 1 ? durationInFrames : Math.round(S[i + 1].start * fps);
+        const to = i === S.length - 1 ? contentEnd : Math.round(S[i + 1].start * fps);
         return (
           <Sequence key={i} from={from} durationInFrames={Math.max(1, to - from)}>
             <SentenceView s={s} accent={p.accent} label={p.label} />
           </Sequence>
         );
       })}
+      {outroF > 0 && (
+        <Sequence from={contentEnd} durationInFrames={outroF}>
+          <EndCard accent={p.accent} handle={p.handle} label={p.label} />
+        </Sequence>
+      )}
       {/* efeitos sonoros: impacto no 1.º quadro, clique em cada corte, pop nos números */}
       <Sequence from={0} durationInFrames={20}>
         <Audio src={staticFile("impacto.wav")} volume={0.9} />
@@ -349,7 +358,8 @@ export const Reel: React.FC<ReelProps> = (p) => {
         <Audio
           src={staticFile(p.music)}
           volume={(fr) =>
-            0.22 * interpolate(fr, [0, 10, durationInFrames - 25, durationInFrames], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })
+            // por baixo da voz a 22%; sobe no cartão final e desvanece no fim
+            interpolate(fr, [0, 10, contentEnd - 10, contentEnd + 8, durationInFrames - 20, durationInFrames], [0, 0.22, 0.22, 0.4, 0.4, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })
           }
         />
       )}

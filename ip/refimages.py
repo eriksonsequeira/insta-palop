@@ -99,7 +99,9 @@ def pick(cenas: list, work: Path) -> dict[int, dict]:
         f"cada ficheiro na pasta atual) e escolhe a que MOSTRA MESMO aquilo de que a cena fala, com boa qualidade.\n"
         "Regras: rejeita imagens irrelevantes, de má qualidade, com texto ilegível dominante, mapas/diagramas confusos, "
         "pessoas em situação embaraçosa, conteúdo violento ou sexual, ou que possam induzir em erro sobre o assunto. "
-        "Na dúvida, escolhe null (é melhor não ter imagem do que ter uma errada).\n\n" + "\n".join(lines)
+        "Padrão profissional: só aceita se um espectador, ao ver a imagem, reconhecer logo o assunto da cena (a empresa, "
+        "o produto, o lugar ou a pessoa). Imagens genéricas ou decorativas (joias, pessoas ao acaso, paisagens, objetos "
+        "soltos) = null. Na dúvida, escolhe null (é melhor não ter imagem do que ter uma errada).\n\n" + "\n".join(lines)
         + "\n\nResponde com uma escolha por cena listada (ficheiro = nome exato, ou null)."
     )
     try:
