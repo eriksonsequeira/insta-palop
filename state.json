@@ -67,6 +67,16 @@
       "status": "so-reel",
       "permalink": null,
       "reel": "https://www.instagram.com/reel/DgQbvhmsCnh/"
+    },
+    {
+      "id": "20261128-0450",
+      "created": "2026-11-28T04:50+00:00",
+      "pilar": "ia",
+      "formato": "tech-visual",
+      "tema": "Robô humanoide IRON da Xpeng (AI Day 25/11/2026): preço perto do de um carro elétrico, vendas em 2027 e impacto em empregos",
+      "status": "so-reel",
+      "permalink": null,
+      "reel": "gerado"
     }
   ],
   "stories": [
@@ -102,5 +112,9 @@
       "tema": "Gemini Notebook (antigo NotebookLM) da Google cria flashcards grátis com imagens, cronómetro e lembretes",
       "status": "publicado"
     }
+  ],
+  "convites": [
+    "O IRON tem mais de 1500 sensores. Tu só precisas de um toque em Seguir @erikson_sequeira.",
+    "O IRON só se vende em 2027. Seguir @erikson_sequeira, podes já hoje."
   ]
 }

@@ -1,0 +1,84 @@
+{
+  "cenas": [
+    {
+      "fala": "Xpeng quer vender um robô humanoide ao preço de um carro elétrico. Já em 2027.",
+      "palavra_chave": "humanoide",
+      "destaque": "2027",
+      "imagem_busca": "Xpeng humanoid robot"
+    },
+    {
+      "fala": "Mostrou o IRON a 25 de novembro. Em palco, respondeu ao vivo ao público.",
+      "palavra_chave": "IRON",
+      "destaque": null,
+      "imagem_busca": "Xpeng IRON robot stage"
+    },
+    {
+      "fala": "Mas preço exato ainda não há. Brian Gu, da Xpeng, diz que pode ficar perto.",
+      "palavra_chave": "preço",
+      "destaque": null,
+      "imagem_busca": "Xpeng electric car"
+    },
+    {
+      "fala": "Por dentro: mais de 1500 sensores táteis e três chips de IA feitos pela Xpeng.",
+      "palavra_chave": "sensores",
+      "destaque": "1500",
+      "imagem_busca": "robot hand sensors"
+    },
+    {
+      "fala": "Agora, o calendário: produção em massa em janeiro de 2027, vendas no segundo trimestre.",
+      "palavra_chave": "calendário",
+      "destaque": "2027",
+      "imagem_busca": "robot factory production line"
+    },
+    {
+      "fala": "Primeiro lojas, receção e eventos. Em casa, talvez 1 a 2 anos depois.",
+      "palavra_chave": "lojas",
+      "destaque": null,
+      "imagem_busca": "Xpeng showroom"
+    },
+    {
+      "fala": "Nos PALOP, isso conta: receção e eventos são fortes no turismo.",
+      "palavra_chave": "turismo",
+      "destaque": null,
+      "imagem_busca": "Cape Verde hotel"
+    },
+    {
+      "fala": "Contratavas um robô destes para a tua loja ou hotel?",
+      "palavra_chave": "robô",
+      "destaque": null,
+      "imagem_busca": "humanoid robot reception"
+    }
+  ],
+  "pronuncias": [
+    {
+      "escrito": "Xpeng",
+      "dito": "équis-pengue"
+    },
+    {
+      "escrito": "IRON",
+      "dito": "ai-ron"
+    },
+    {
+      "escrito": "IA",
+      "dito": "i-á"
+    },
+    {
+      "escrito": "Brian Gu",
+      "dito": "Braian Gu"
+    },
+    {
+      "escrito": "PALOP",
+      "dito": "palópe"
+    }
+  ],
+  "convite_falado": "O IRON só se vende em 2027. Seguir a página, podes já hoje.",
+  "convite_seguir": "O IRON só se vende em 2027. Seguir @erikson_sequeira, podes já hoje.",
+  "legenda": "Um robô humanoide ao preço de um carro elétrico. É o que a Xpeng promete para 2027.\n\nA fabricante chinesa mostrou o IRON no AI Day, a 25 de novembro, em Guangzhou. Em palco, o robô respondeu ao vivo a perguntas do público.\n\nPreço exato ainda não há. Brian Gu, da direção da Xpeng, disse à Bloomberg que pode ficar perto do preço mediano de um carro elétrico. Desconfia de quem já te dá um número fechado.\n\nO plano: produção em massa a partir de janeiro de 2027 e vendas ao público no 2.º trimestre. Primeiro em lojas, receção e eventos. Em casa, talvez só 1 a 2 anos depois.\n\nPara os PALOP, há uma pista: receção e eventos pesam muito no turismo. Quem aprender já a trabalhar com IA chega primeiro.\n\nContratavas um robô para a tua loja ou hotel?",
+  "hashtags": [
+    "robotica",
+    "inteligenciaartificial",
+    "xpeng",
+    "tecnologia",
+    "palop"
+  ]
+}

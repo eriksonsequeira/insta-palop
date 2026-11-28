@@ -1,0 +1,69 @@
+{
+  "pilar": "ia",
+  "formato": "tech-visual",
+  "tema": "Robô humanoide IRON da Xpeng (AI Day 25/11/2026): preço perto do de um carro elétrico, vendas em 2027 e impacto em empregos",
+  "capa_titulo": "Um robô humanoide ao preço de um carro",
+  "capa_subtitulo": "A Xpeng mostrou o IRON esta semana e quer vendê-lo em 2027. Eis o que já se sabe.",
+  "slides": [
+    {
+      "titulo": "Apresentado esta semana, na China",
+      "texto": "A Xpeng, fabricante chinesa de carros elétricos, mostrou o humanoide IRON no seu AI Day, a 25 de novembro, em Guangzhou. Em palco, o robô respondeu ao vivo a perguntas do público.",
+      "destaque": "25/11/2026"
+    },
+    {
+      "titulo": "Vai custar o mesmo que um carro",
+      "texto": "Brian Gu, da direção da Xpeng, disse à Bloomberg que o preço pode ficar perto do preço mediano de um carro elétrico. Valor exato? Ainda não há. Desconfia de quem já te dá um número fechado.",
+      "destaque": "Preço de um carro"
+    },
+    {
+      "titulo": "Um corpo cheio de sensores",
+      "texto": "76 graus de liberdade no corpo, 21 em cada mão e mais de 1500 pontos de sensores táteis. Funciona com três chips de IA feitos pela própria Xpeng e usa uma bateria de estado sólido.",
+      "destaque": "1500+ sensores"
+    },
+    {
+      "titulo": "O calendário: 2027 é o ano",
+      "texto": "Produção em massa a partir de janeiro de 2027. No 1.º trimestre começa a treinar como assistente nas lojas da Xpeng. Vendas ao público no 2.º trimestre. A meta: vender \"dezenas de milhares\" em 2027.",
+      "destaque": "Janeiro 2027"
+    },
+    {
+      "titulo": "Primeiro na loja, só depois em casa",
+      "texto": "Depois das lojas, a Xpeng aponta para receção, educação, eventos e indústria. Em casa? Talvez 1 a 2 anos depois de provar no comércio. Segurança com crianças, idosos e animais ainda é um desafio.",
+      "destaque": null
+    },
+    {
+      "titulo": "E nos PALOP, o que muda?",
+      "texto": "Não chega amanhã ao Mindelo nem a Luanda. Mas os primeiros alvos (receção, lojas, eventos) são setores fortes no turismo. E o negócio também está no software: subscrições e treino. Aprende já a trabalhar com IA.",
+      "destaque": null
+    }
+  ],
+  "cta_titulo": "Contratavas um robô para a tua loja ou hotel? Diz nos comentários.",
+  "convite_seguir": "O IRON tem mais de 1500 sensores. Tu só precisas de um toque em Seguir @erikson_sequeira.",
+  "legenda": "Um robô com ar humano subiu ao palco na China e respondeu, ao vivo, às perguntas do público.\n\nChama-se IRON e é da Xpeng, uma marca conhecida pelos carros elétricos. A grande notícia é o preço: segundo Brian Gu, da direção da empresa, em declarações à Bloomberg, pode ficar perto do preço mediano de um carro elétrico. Ainda não há um valor oficial, por isso desconfia de quem já anda a espalhar números certos.\n\nHá um pormenor que diz muito: a Xpeng não vai pôr o robô primeiro em casas. Vai pô-lo a trabalhar nas próprias lojas, como assistente, a partir do início de 2027. Os responsáveis admitem que fazer uma tarefa enquanto se anda e se responde a perguntas ainda é a parte mais difícil.\n\nE repara no modelo de negócio. A empresa não quer só vender a máquina. Quer ganhar dinheiro com subscrições de software, atualizações, treino e serviços. Ou seja, o valor está cada vez mais na inteligência e menos no \"ferro\".\n\nComo empreendedor cabo-verdiano, vejo aqui um sinal claro: as funções de atendimento, receção e eventos vão mudar. Nos PALOP isto não acontece amanhã, mas quem trabalha em turismo e comércio ganha se começar já a aprender a usar IA no dia a dia.\n\nAchas que um robô destes ia funcionar num hotel em Cabo Verde, Angola ou Moçambique?\n\nPartilha com quem trabalha em turismo ou comércio.\n\nFonte: CNBC, Bloomberg, Digital Trends, Humanoids Daily",
+  "hashtags": [
+    "inteligenciaartificial",
+    "robotica",
+    "humanoide",
+    "inovacao",
+    "tecnologiapalop"
+  ],
+  "alt_text": "Carrossel sobre o robô humanoide IRON da Xpeng, apresentado a 25/11/2026: preço perto do de um carro elétrico, mais de 1500 sensores, vendas previstas para 2027 e o que muda nos empregos e nos PALOP.",
+  "story_gancho": "A Xpeng quer vender um robô humanoide ao preço de um carro elétrico. E já tem data: 2027.",
+  "fontes": [
+    "https://www.cnbc.com/2026/11/26/china-ev-xpeng-humanoid-robots-household-chores.html",
+    "https://www.bloomberg.com/news/articles/2026-11-26/xpeng-says-its-humanoid-robot-will-cost-the-same-as-an-ev",
+    "https://www.digitaltrends.com/cool-tech/xpeng-iron-humanoid-robot-ev-price-home/",
+    "https://www.humanoidsdaily.com/news/xpeng-details-mass-production-iron-humanoid-at-ai-day-2026-confirms-unisex-form-factor-and-vla-3-0",
+    "https://www.tradingview.com/news/seekingalpha:926918b83094b:0-xpeng-unveils-iron-humanoid-robot-eyes-q2-2027-sales-near-ev-pricing/"
+  ],
+  "id": "20261128-0450",
+  "images": [
+    "01.jpg",
+    "02.jpg",
+    "03.jpg",
+    "04.jpg",
+    "05.jpg",
+    "06.jpg",
+    "07.jpg",
+    "08.jpg"
+  ]
+}
