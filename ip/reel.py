@@ -26,10 +26,8 @@ MUSIC_DIR = ROOT / "assets" / "music"
 GEMINI_MODELS = [m for m in (os.environ.get("GEMINI_TTS_MODEL"), "gemini-3.8-flash-tts",
                              "gemini-3.1-flash-tts-preview", "gemini-2.5-flash-preview-tts") if m]
 GEMINI_VOICE = os.environ.get("GEMINI_TTS_VOICE", "Puck")
-GEMINI_STYLE = ("Lê em português europeu, com sotaque de Lisboa (nunca sotaque do Brasil). Tom de criador de conteúdo "
-                "de tecnologia: confiante e próximo, ritmo calmo e bem articulado, com uma pequena pausa entre frases e ênfase "
-                "nas palavras importantes. Lê os números devagar. "
-                "Texto a ler:\n\n")
+# instrução CURTA: textos de estilo longos às vezes são lidos em voz alta (a proteção _fix_lead corta-os se acontecer)
+GEMINI_STYLE = ("Diz em português de Lisboa, tom confiante e próximo, ritmo calmo e claro, com pausa entre frases:\n\n")
 OUTRO = 3.2  # segundos do cartão final (conta + convite para seguir, para dar tempo de ler)
 TARGET_WPM = 150  # ritmo confortável para PT-PT; a voz nunca é acelerada, só abrandada se preciso
 
@@ -261,6 +259,30 @@ def align(audio: Path, tokens: list[str]) -> list[tuple[float, float]]:
     return times
 
 
+def _fix_lead(audio: Path, stimes: list, n_words: int, work: Path) -> tuple[Path, list]:
+    """Proteção: às vezes o Gemini lê em voz alta as instruções de estilo antes do guião (ex.: 15 s de "Lê em
+    português europeu…" com o ecrã parado na 1.ª frase). Corta tudo o que vem antes da 1.ª palavra do guião e
+    depois da última, e volta a acertar o ritmo com a duração real."""
+    lead, last = stimes[0][0], stimes[-1][1]
+    dur = _dur(audio)
+    if lead <= 1.0 and dur - last <= 2.0:
+        return audio, stimes
+    start, end = max(0.0, lead - 0.12), min(dur, last + 0.35)
+    print(f"[reel] AVISO: {lead:.1f}s antes do guião e {dur - last:.1f}s depois (instruções lidas?) — cortado")
+    out = work / "narration_fix.wav"
+    _run("ffmpeg", "-y", "-loglevel", "error", "-i", str(audio), "-af", f"atrim={start:.3f}:{end:.3f},asetpts=PTS-STARTPTS",
+         "-ar", "44100", "-ac", "2", str(out))
+    st = [(a - start, b - start) for a, b in stimes]
+    wpm = n_words / ((end - start) / 60)
+    tempo = max(0.87, min(1.0, TARGET_WPM / wpm))
+    if tempo < 0.995:
+        slow = work / "narration_fix2.wav"
+        _run("ffmpeg", "-y", "-loglevel", "error", "-i", str(out), "-af", f"atempo={tempo:.3f}", str(slow))
+        out, st = slow, [(a / tempo, b / tempo) for a, b in st]
+    print(f"[reel] ritmo real {wpm:.0f} → {wpm * tempo:.0f} palavras/min")
+    return out, st
+
+
 # ---------------- cenas ----------------
 
 # palavras que nunca devem ficar sozinhas no fim de um bloco de legenda ("Segundo a", "IA para", "da probabilidade de")
@@ -353,6 +375,7 @@ def render(post: dict, script: ReelScript, out_dir: Path) -> Path:
     said, idx = spoken_tokens(tokens, script.pronuncias)
     audio = narrate(" ".join(said), work)
     stimes = align(audio, said)
+    audio, stimes = _fix_lead(audio, stimes, len(said), work)
     times: list = [None] * len(tokens)
     for (st, en), j in zip(stimes, idx):
         times[j] = (st, en) if times[j] is None else (min(times[j][0], st), max(times[j][1], en))
