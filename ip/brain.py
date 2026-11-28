@@ -64,6 +64,7 @@ FORMATO DOS SLIDES (carrossel 4:5):
 
 LEGENDA: 600–1500 caracteres. Primeira linha = gancho. Desenvolve com valor extra (não repitas só os slides),
 termina com uma pergunta para gerar comentários e um "Guarda este post" ou "Partilha com quem precisa".
+O convite_seguir é acrescentado automaticamente à legenda (não o repitas lá).
 Inclui "Fonte: <nome do meio>" no fim (sem URLs). NÃO incluas hashtags na legenda.
 hashtags: exatamente 5, sem '#', em minúsculas, misturando gerais e de nicho/PALOP (o país só se o post for sobre ele).
 """
@@ -83,6 +84,8 @@ class Post(BaseModel):
     capa_subtitulo: str
     slides: list[Slide]
     cta_titulo: str
+    convite_seguir: str = Field(default="", description="convite ÚNICO e criativo para seguir a página, ligado ao "
+                                "tema (máx. 120 caracteres, ver regras CONVITE PARA SEGUIR)")
     legenda: str
     hashtags: list[str]
     alt_text: str = Field(description="descrição acessível do carrossel, máx. 250 caracteres")
@@ -129,7 +132,9 @@ def choose_angle(history: list[dict]) -> tuple[str, str]:
     return pilar, formato
 
 
-def build_prompt(pilar: str, formato: str, history: list[dict], hint: str = "", foco: str = "global") -> str:
+def build_prompt(pilar: str, formato: str, history: list[dict], hint: str = "", foco: str = "global",
+                 avoid: str = "") -> str:
+    from . import convite
     temas = "\n".join(f"- [{p['pilar']}] {p['tema']}" for p in history[-40:]) or "(nenhum ainda)"
     nomes = {"ia": "Inteligência Artificial", "tecnologia": "Tecnologia", "negocios": "Negócios e empreendedorismo"}
     return (
@@ -144,7 +149,8 @@ def build_prompt(pilar: str, formato: str, history: list[dict], hint: str = "", 
         + "Escolhe o tema com mais interesse para o público e que NÃO repita nenhum destes temas já publicados:\n"
         f"{temas}\n\n"
         + (f"Indicação extra: {hint}\n\n" if hint else "")
-        + "Verifica cada facto com pelo menos uma fonte antes de o usar."
+        + "Verifica cada facto com pelo menos uma fonte antes de o usar.\n\n"
+        + convite.RULES + avoid
     )
 
 
@@ -195,8 +201,9 @@ def _parse_api(prompt: str, model=None):
     return model.model_validate_json(m.group(0))
 
 
-def write_post(pilar: str, formato: str, history: list[dict], hint: str = "", foco: str = "global") -> Post:
-    prompt = build_prompt(pilar, formato, history, hint, foco)
+def write_post(pilar: str, formato: str, history: list[dict], hint: str = "", foco: str = "global",
+               avoid: str = "") -> Post:
+    prompt = build_prompt(pilar, formato, history, hint, foco, avoid)
     if os.environ.get("CLAUDE_CODE_OAUTH_TOKEN") or os.environ.get("USE_CLAUDE_CLI") == "1":
         try:
             return _clean(_parse_cli(prompt))
@@ -277,6 +284,8 @@ class StoryPill(BaseModel):
     texto: str = Field(description="máx. 190 caracteres, explica/acrescenta valor")
     destaque: str | None = Field(default=None, description="número ou palavra curta (máx. 12 caracteres), só se confirmado")
     fonte_nome: str = Field(description="nome do meio/empresa fonte (ex.: Reuters), sem URL")
+    convite_seguir: str = Field(default="", description="convite ÚNICO e criativo para seguir a página, ligado ao "
+                                "tema, máx. 90 caracteres (ver regras CONVITE PARA SEGUIR)")
     fontes: list[str]
 
 
@@ -287,7 +296,8 @@ def choose_pill(stories: list[dict]) -> tuple[str, str]:
     return tipo, pilar
 
 
-def write_pill(tipo: str, pilar: str, history: list[dict], hint: str = "") -> StoryPill:
+def write_pill(tipo: str, pilar: str, history: list[dict], hint: str = "", avoid: str = "") -> StoryPill:
+    from . import convite
     nomes = {"ia": "Inteligência Artificial", "tecnologia": "Tecnologia", "negocios": "Negócios"}
     temas = "\n".join(f"- {p['tema']}" for p in history[-60:]) or "(nenhum)"
     prompt = (
@@ -296,7 +306,8 @@ def write_pill(tipo: str, pilar: str, history: list[dict], hint: str = "") -> St
         "Pesquisa na internet primeiro. Pode ser global ou dos PALOP — o que for mais interessante. "
         "Texto curtíssimo e claro, PT-PT. Não repitas estes temas já usados:\n"
         f"{temas}\n\n" + (f"Indicação extra: {hint}\n\n" if hint else "")
-        + f'Usa tipo = "{tipo}". Nada de legendas nem hashtags.'
+        + f'Usa tipo = "{tipo}". Nada de legendas nem hashtags.\n\n'
+        + convite.RULES.replace("Máx. 120 caracteres", "Máx. 90 caracteres") + avoid
     )
     if os.environ.get("CLAUDE_CODE_OAUTH_TOKEN") or os.environ.get("USE_CLAUDE_CLI") == "1":
         try:

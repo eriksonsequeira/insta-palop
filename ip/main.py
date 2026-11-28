@@ -9,7 +9,7 @@ import os
 import sys
 from datetime import datetime, timezone
 
-from . import brain, state
+from . import brain, convite, state
 from .config import DRAFTS, MEDIA, MEDIA_BASE_URL
 
 
@@ -22,7 +22,7 @@ def _out(key: str, value: str) -> None:
 
 def caption(post: dict) -> str:
     tags = " ".join(f"#{h}" for h in post["hashtags"])
-    return f"{post['legenda'].strip()}\n\n{tags}"[:2200]
+    return f"{convite.with_invite(post['legenda'], post.get('convite_seguir', ''))}\n\n{tags}"[:2200]
 
 
 def create(hint: str = "") -> str:
@@ -34,7 +34,7 @@ def create(hint: str = "") -> str:
     print(f"[post] pilar={pilar} formato={formato} foco={foco}")
     post = None
     for attempt in range(2):
-        cand = brain.write_post(pilar, formato, st["posts"], hint, foco)
+        cand = brain.write_post(pilar, formato, st["posts"], hint, foco, convite.avoid_block(st))
         v = brain.verify(cand)
         if v.aprovado:
             print("[verificação] aprovado")
@@ -57,6 +57,7 @@ def create(hint: str = "") -> str:
     (DRAFTS / f"{post_id}.json").write_text(json.dumps(data, ensure_ascii=False, indent=2))
     (DRAFTS / f"{post_id}.md").write_text(review_md(data))
     state.record(st, post_id, data, "rascunho")
+    convite.remember(st, post.convite_seguir)
     state.save(st)
     print(f"[post] {post_id}: {post.tema}")
     _out("post_id", post_id)
@@ -112,7 +113,7 @@ def create_pill(hint: str = "") -> str:
     history = stories + st["posts"]
     pill = None
     for _ in range(2):
-        cand = brain.write_pill(tipo, pilar, history, hint)
+        cand = brain.write_pill(tipo, pilar, history, hint, convite.avoid_block(st))
         cand.tipo = tipo
         v = brain.verify(cand)
         if v.aprovado:
@@ -128,6 +129,7 @@ def create_pill(hint: str = "") -> str:
     (MEDIA / "stories" / sid / "story.json").write_text(pill.model_dump_json(indent=2))
     stories.append({"id": sid, "created": datetime.now(timezone.utc).isoformat(timespec="minutes"),
                     "tipo": tipo, "pilar": pilar, "tema": pill.tema, "status": "rascunho"})
+    convite.remember(st, pill.convite_seguir)
     state.save(st)
     print(f"[story] {sid}: {pill.tema}")
     _out("story_id", sid)
@@ -171,6 +173,8 @@ def create_reel(post_id: str | None = None) -> str:
             state.save(st)
     d = json.loads((DRAFTS / f"{post_id}.json").read_text())
     reel.build(d, MEDIA / post_id)
+    st = state.load()
+    convite.remember(st, json.loads((MEDIA / post_id / "reel.json").read_text()).get("convite_seguir", ""))
     for p in st["posts"]:
         if p["id"] == post_id:
             p["reel"] = "gerado"
@@ -196,7 +200,9 @@ def publish_reel(post_id: str) -> str:
     cred_f = MEDIA / post_id / "credits.txt"
     cred = cred_f.read_text().strip() if cred_f.exists() else ""
     cred = f"\n\nImagens: {'; '.join(cred.splitlines())}" if cred else ""
-    link = instagram.publish_reel(url, f"{script['legenda'].strip()}{cred}\n\n{tags}"[:2200])
+    draft = DRAFTS / f"{post_id}.json"
+    inv = script.get("convite_seguir") or (json.loads(draft.read_text()).get("convite_seguir", "") if draft.exists() else "")
+    link = instagram.publish_reel(url, f"{convite.with_invite(script['legenda'], inv)}{cred}\n\n{tags}"[:2200])
     st = state.load()
     for p in st["posts"]:
         if p["id"] == post_id:

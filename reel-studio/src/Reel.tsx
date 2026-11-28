@@ -38,6 +38,7 @@ export type ReelProps = {
   handle: string;
   sentences: Sentence[];
   outro?: number; // segundos do cartão final
+  convite?: string | null; // convite criativo para seguir (único em cada Reel)
 };
 
 /* zonas seguras do Instagram no telemóvel (1080x1920):
@@ -278,7 +279,7 @@ const SentenceView: React.FC<{ s: Sentence; accent: string; label: string }> = (
 };
 
 /* ---------- cartão final ---------- */
-const EndCard: React.FC<{ accent: string; handle: string; label: string }> = ({ accent, handle, label }) => {
+const EndCard: React.FC<{ accent: string; handle: string; label: string; convite?: string | null }> = ({ accent, handle, label, convite }) => {
   const f = useCurrentFrame();
   const { fps } = useVideoConfig();
   const a = (d: number) => spring({ frame: f - d, fps, config: { damping: 16, stiffness: 180 } });
@@ -300,12 +301,24 @@ const EndCard: React.FC<{ accent: string; handle: string; label: string }> = ({ 
         {handle}
       </div>
       <div style={{ ...item(9), height: 8, width: 180, borderRadius: 8, background: accent, margin: "40px 0" }} />
-      {["Guarda para rever", "Partilha com quem precisa", "Segue para mais"].map((t, i) => (
-        <div key={t} style={{ ...item(13 + i * 4), fontFamily: BODY, fontWeight: 600, fontSize: 46, color: "rgba(244,241,234,.9)", marginBottom: 22, display: "flex", alignItems: "center", gap: 22 }}>
-          <span style={{ width: 16, height: 16, borderRadius: 99, background: accent, display: "inline-block" }} />
-          {t}
-        </div>
-      ))}
+      {convite ? (
+        <>
+          <div style={{ ...item(13), fontFamily: DISPLAY, fontWeight: 700, fontSize: convite.length > 80 ? 54 : 62, lineHeight: 1.15, letterSpacing: "-0.02em", color: INK }}>
+            {/* o @ já está em cima: no texto diz "esta página"; número e símbolo nunca se separam */}
+            {convite.split(handle).join("esta página").replace(/(\d) (€|%|\$)/g, "$1\u00A0$2")}
+          </div>
+          <div style={{ ...item(20), marginTop: 44, display: "inline-flex", alignSelf: "flex-start", alignItems: "center", gap: 18, background: accent, color: BG, borderRadius: 999, padding: "20px 40px", fontFamily: BODY, fontWeight: 800, fontSize: 40, transform: `scale(${1 + 0.04 * Math.sin(f / 4)})` }}>
+            + Seguir
+          </div>
+        </>
+      ) : (
+        ["Guarda para rever", "Partilha com quem precisa", "Segue para mais"].map((t, i) => (
+          <div key={t} style={{ ...item(13 + i * 4), fontFamily: BODY, fontWeight: 600, fontSize: 46, color: "rgba(244,241,234,.9)", marginBottom: 22, display: "flex", alignItems: "center", gap: 22 }}>
+            <span style={{ width: 16, height: 16, borderRadius: 99, background: accent, display: "inline-block" }} />
+            {t}
+          </div>
+        ))
+      )}
     </AbsoluteFill>
   );
 };
@@ -331,7 +344,7 @@ export const Reel: React.FC<ReelProps> = (p) => {
       })}
       {outroF > 0 && (
         <Sequence from={contentEnd} durationInFrames={outroF}>
-          <EndCard accent={p.accent} handle={p.handle} label={p.label} />
+          <EndCard accent={p.accent} handle={p.handle} label={p.label} convite={p.convite} />
         </Sequence>
       )}
       {/* efeitos sonoros: impacto no 1.º quadro, clique em cada corte, pop nos números */}
