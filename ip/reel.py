@@ -198,7 +198,7 @@ def narrate(text: str, work: Path) -> Path:
          "-ar", "44100", "-ac", "1", str(tight))
     words = len(text.split())
     wpm = words / (_dur(tight) / 60)
-    tempo = max(0.9, min(1.0, TARGET_WPM / wpm))
+    tempo = max(0.87, min(1.0, TARGET_WPM / wpm))  # abaixo de 0,87 a voz fica arrastada
     out = work / "narration.wav"
     _run("ffmpeg", "-y", "-loglevel", "error", "-i", str(tight), "-af",
          f"atempo={tempo:.3f},loudnorm=I=-16:TP=-1.5:LRA=11", "-ar", "44100", "-ac", "2", str(out))
