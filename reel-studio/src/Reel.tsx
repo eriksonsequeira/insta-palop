@@ -349,7 +349,7 @@ export const Reel: React.FC<ReelProps> = (p) => {
         <Audio
           src={staticFile(p.music)}
           volume={(fr) =>
-            0.07 * interpolate(fr, [0, 10, durationInFrames - 25, durationInFrames], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })
+            0.22 * interpolate(fr, [0, 10, durationInFrames - 25, durationInFrames], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })
           }
         />
       )}
